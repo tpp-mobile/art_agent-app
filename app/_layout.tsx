@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Stack, useRouter, useSegments } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import * as SplashScreen from 'expo-splash-screen';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useColorScheme as useSystemColorScheme } from 'react-native';
@@ -10,6 +11,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { ToastContainer } from '../src/components/ui/Toast';
 import { useThemeStore, useAuthStore } from '../src/stores';
 import '../global.css';
+
+// Prevent the splash screen from auto-hiding before asset loading is complete
+SplashScreen.preventAutoHideAsync();
 
 function AuthNavigator() {
   const { isAuthenticated } = useAuthStore();
@@ -63,6 +67,12 @@ export default function RootLayout() {
   const { effectiveTheme, mode, setMode } = useThemeStore();
 
   useEffect(() => {
+    if (fontsLoaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
+
+  useEffect(() => {
     setColorScheme(effectiveTheme);
   }, [effectiveTheme, setColorScheme]);
 
@@ -86,3 +96,4 @@ export default function RootLayout() {
     </GestureHandlerRootView>
   );
 }
+
