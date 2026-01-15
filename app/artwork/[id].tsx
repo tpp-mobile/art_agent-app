@@ -34,7 +34,7 @@ export default function ArtworkDetail() {
   if (!artwork) {
     return (
       <SafeAreaView className="flex-1 bg-background-secondary dark:bg-dark-primary items-center justify-center">
-        <Ionicons name="alert-circle" size={64} color="#94a3b8" />
+        <Ionicons name="alert-circle" size={64} color="#E0E0E0" />
         <Text className="text-lg text-text-secondary dark:text-gray-400 mt-4">Artwork not found</Text>
         <Button title="Go Back" variant="outline" onPress={() => router.back()} style={{ marginTop: 16 }} />
       </SafeAreaView>
@@ -67,8 +67,12 @@ export default function ArtworkDetail() {
     toggleLike(artwork.id);
   };
 
-  const handleContactArtist = () => {
+  const handleContactArtist = (context: 'general' | 'request_proof' = 'general') => {
     if (!user) return;
+
+    const initialMessage = context === 'request_proof'
+      ? `Hi, I'm interested in "${artwork.title}" and would like to request additional process proofs to verify its authenticity.`
+      : undefined;
 
     const conversationId = startConversation(
       artwork.artistId,
@@ -84,7 +88,12 @@ export default function ArtworkDetail() {
       artwork.thumbnailUrl
     );
 
-    router.push(`/chat/${conversationId}`);
+    // In a real app we'd pass initialMessage to the chat screen or send it immediately
+    // For now, we'll just navigate
+    router.push({
+      pathname: `/chat/${conversationId}`,
+      params: { initialMessage }
+    });
   };
 
   const openProof = (proof: ProcessProof) => {
@@ -103,7 +112,7 @@ export default function ArtworkDetail() {
           onPress={() => router.back()}
           className="w-10 h-10 rounded-full bg-background-card dark:bg-dark-card items-center justify-center"
         >
-          <Ionicons name="arrow-back" size={24} color="#64748b" />
+          <Ionicons name="arrow-back" size={24} color="#1E1E1E" />
         </TouchableOpacity>
         <View className="flex-row">
           <TouchableOpacity
@@ -113,7 +122,7 @@ export default function ArtworkDetail() {
             <Ionicons
               name={shortlisted ? 'bookmark' : 'bookmark-outline'}
               size={24}
-              color={shortlisted ? '#f59e0b' : '#64748b'}
+              color={shortlisted ? '#D97757' : '#1E1E1E'}
             />
           </TouchableOpacity>
           <TouchableOpacity
@@ -123,14 +132,14 @@ export default function ArtworkDetail() {
             <Ionicons
               name={liked ? 'heart' : 'heart-outline'}
               size={24}
-              color={liked ? '#ef4444' : '#64748b'}
+              color={liked ? '#C84B4B' : '#1E1E1E'}
             />
           </TouchableOpacity>
           <TouchableOpacity
             onPress={handleShare}
             className="w-10 h-10 rounded-full bg-background-card dark:bg-dark-card items-center justify-center"
           >
-            <Ionicons name="share-outline" size={24} color="#64748b" />
+            <Ionicons name="share-outline" size={24} color="#1E1E1E" />
           </TouchableOpacity>
         </View>
       </View>
@@ -178,7 +187,22 @@ export default function ArtworkDetail() {
                   </Text>
                 </View>
                 {user?.role === 'agent' && (
-                  <Button title="Contact Artist" variant="primary" size="md" onPress={handleContactArtist} />
+                  <View className="flex-row">
+                    <Button
+                      title="Request Proof"
+                      variant="outline"
+                      size="md"
+                      onPress={() => handleContactArtist('request_proof')}
+                      style={{ marginRight: 8, flex: 1 }}
+                    />
+                    <Button
+                      title="Contact Artist"
+                      variant="primary"
+                      size="md"
+                      onPress={() => handleContactArtist('general')}
+                      style={{ flex: 1 }}
+                    />
+                  </View>
                 )}
               </View>
             </Card>
@@ -190,7 +214,7 @@ export default function ArtworkDetail() {
               <View className="flex-row items-center justify-between mb-4">
                 <Text className="text-lg font-bold text-text-primary dark:text-text-inverse">Verification</Text>
                 <View className="flex-row items-center">
-                  <Ionicons name="shield-checkmark" size={20} color="#10b981" />
+                  <Ionicons name="shield-checkmark" size={20} color="#6FAF8E" />
                   <Text className="text-sm font-medium text-success ml-1">
                     {result.humanScore}% Human
                   </Text>
@@ -227,10 +251,10 @@ export default function ArtworkDetail() {
                       size={18}
                       color={
                         check.status === 'passed'
-                          ? '#10b981'
+                          ? '#6FAF8E'
                           : check.status === 'warning'
-                            ? '#f59e0b'
-                            : '#ef4444'
+                            ? '#D97757'
+                            : '#C84B4B'
                       }
                     />
                     <Text className="text-sm text-text-secondary dark:text-gray-400 ml-1">{check.label}</Text>
@@ -246,7 +270,7 @@ export default function ArtworkDetail() {
 
               {artwork.certificateId && (
                 <View className="mt-3 pt-3 border-t border-border-light dark:border-dark-tertiary flex-row items-center">
-                  <Ionicons name="ribbon" size={18} color="#059669" />
+                  <Ionicons name="ribbon" size={18} color="#3A7DFF" />
                   <Text className="text-sm text-text-secondary dark:text-gray-400 ml-2">
                     Certificate: {artwork.certificateId}
                   </Text>
@@ -322,9 +346,9 @@ export default function ArtworkDetail() {
                   </View>
                   <View className="flex-row items-center">
                     {proof.verified && (
-                      <Ionicons name="checkmark-circle" size={18} color="#10b981" />
+                      <Ionicons name="checkmark-circle" size={18} color="#6FAF8E" />
                     )}
-                    <Ionicons name="chevron-forward" size={20} color="#94a3b8" className="ml-2" />
+                    <Ionicons name="chevron-forward" size={20} color="#E0E0E0" className="ml-2" />
                   </View>
                 </TouchableOpacity>
               ))}
@@ -344,21 +368,21 @@ export default function ArtworkDetail() {
           {/* Stats */}
           <View className="flex-row items-center justify-around py-4 border-t border-border-light dark:border-dark-tertiary">
             <View className="items-center">
-              <Ionicons name="eye-outline" size={20} color="#64748b" />
+              <Ionicons name="eye-outline" size={20} color="#4A4A4A" />
               <Text className="text-sm font-medium text-text-primary dark:text-text-inverse mt-1">
                 {artwork.views.toLocaleString()}
               </Text>
               <Text className="text-xs text-text-tertiary">Views</Text>
             </View>
             <View className="items-center">
-              <Ionicons name="heart-outline" size={20} color="#64748b" />
+              <Ionicons name="heart-outline" size={20} color="#4A4A4A" />
               <Text className="text-sm font-medium text-text-primary dark:text-text-inverse mt-1">
                 {artwork.likes.toLocaleString()}
               </Text>
               <Text className="text-xs text-text-tertiary">Likes</Text>
             </View>
             <View className="items-center">
-              <Ionicons name="bookmark-outline" size={20} color="#64748b" />
+              <Ionicons name="bookmark-outline" size={20} color="#4A4A4A" />
               <Text className="text-sm font-medium text-text-primary dark:text-text-inverse mt-1">
                 {artwork.shortlisted.toLocaleString()}
               </Text>

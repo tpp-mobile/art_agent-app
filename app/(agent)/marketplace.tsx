@@ -143,14 +143,13 @@ export default function Marketplace() {
           </View>
           <TouchableOpacity
             onPress={toggleCompareMode}
-            className={`px-3 py-2 rounded-lg flex-row items-center ${
-              isCompareMode ? 'bg-primary-600' : 'bg-background-card dark:bg-dark-card'
-            }`}
+            className={`px-3 py-2 rounded-lg flex-row items-center ${isCompareMode ? 'bg-primary-600' : 'bg-background-card dark:bg-dark-card'
+              }`}
           >
             <Ionicons
               name="git-compare-outline"
               size={18}
-              color={isCompareMode ? '#ffffff' : '#64748b'}
+              color={isCompareMode ? '#FFFDF9' : '#1E1E1E'}
             />
             <Text className={`text-sm font-medium ml-1 ${isCompareMode ? 'text-white' : 'text-text-secondary dark:text-gray-400'}`}>
               Compare
@@ -164,7 +163,7 @@ export default function Marketplace() {
         <View className="mx-4 mb-2 bg-primary-50 dark:bg-primary-900/20 rounded-xl p-3">
           <View className="flex-row items-center justify-between">
             <View className="flex-row items-center">
-              <Ionicons name="information-circle" size={20} color="#059669" />
+              <Ionicons name="information-circle" size={20} color="#3A7DFF" />
               <Text className="text-sm text-primary-700 dark:text-primary-400 ml-2">
                 Select 2-3 artworks to compare
               </Text>
@@ -211,7 +210,7 @@ export default function Marketplace() {
             <Ionicons
               name="options"
               size={24}
-              color={hasActiveFilters ? '#ffffff' : '#64748b'}
+              color={hasActiveFilters ? '#FFFDF9' : '#1E1E1E'}
             />
           </TouchableOpacity>
         </View>
@@ -260,7 +259,7 @@ export default function Marketplace() {
         )}
         ListEmptyComponent={
           <View className="items-center py-12">
-            <Ionicons name="search-outline" size={64} color="#94a3b8" />
+            <Ionicons name="search-outline" size={64} color="#E0E0E0" />
             <Text className="text-lg text-text-secondary dark:text-gray-400 mt-4">No artworks found</Text>
             <Text className="text-sm text-text-tertiary mt-1">
               Try adjusting your filters
@@ -288,7 +287,7 @@ export default function Marketplace() {
           <View className="flex-row items-center justify-between px-4 py-4 border-b border-border-light dark:border-dark-tertiary">
             <Text className="text-xl font-bold text-text-primary dark:text-text-inverse">Filters</Text>
             <TouchableOpacity onPress={() => setShowFilters(false)}>
-              <Ionicons name="close" size={28} color="#64748b" />
+              <Ionicons name="close" size={28} color="#1E1E1E" />
             </TouchableOpacity>
           </View>
 
@@ -305,19 +304,17 @@ export default function Marketplace() {
                     onPress={() => toggleMedium(medium)}
                     className={`
                       px-3 py-2 rounded-lg mr-2 mb-2
-                      ${
-                        selectedMediums.includes(medium)
-                          ? 'bg-primary-600'
-                          : 'bg-background-card dark:bg-dark-card border border-border-light dark:border-dark-tertiary'
+                      ${selectedMediums.includes(medium)
+                        ? 'bg-primary-600'
+                        : 'bg-background-card dark:bg-dark-card border border-border-light dark:border-dark-tertiary'
                       }
                     `}
                   >
                     <Text
-                      className={`text-sm ${
-                        selectedMediums.includes(medium)
+                      className={`text-sm ${selectedMediums.includes(medium)
                           ? 'text-white font-medium'
                           : 'text-text-secondary dark:text-gray-400'
-                      }`}
+                        }`}
                     >
                       {medium}
                     </Text>
@@ -346,19 +343,17 @@ export default function Marketplace() {
                     }}
                     className={`
                       px-3 py-2 rounded-lg mr-2
-                      ${
-                        minPrice === range.min && maxPrice === range.max
-                          ? 'bg-primary-600'
-                          : 'bg-background-card dark:bg-dark-card border border-border-light dark:border-dark-tertiary'
+                      ${minPrice === range.min && maxPrice === range.max
+                        ? 'bg-primary-600'
+                        : 'bg-background-card dark:bg-dark-card border border-border-light dark:border-dark-tertiary'
                       }
                     `}
                   >
                     <Text
-                      className={`text-sm ${
-                        minPrice === range.min && maxPrice === range.max
+                      className={`text-sm ${minPrice === range.min && maxPrice === range.max
                           ? 'text-white font-medium'
                           : 'text-text-secondary dark:text-gray-400'
-                      }`}
+                        }`}
                     >
                       {range.label}
                     </Text>
@@ -379,19 +374,17 @@ export default function Marketplace() {
                     onPress={() => setMinScore(minScore === score ? null : score)}
                     className={`
                       px-4 py-2 rounded-lg mr-2
-                      ${
-                        minScore === score
-                          ? 'bg-primary-600'
-                          : 'bg-background-card dark:bg-dark-card border border-border-light dark:border-dark-tertiary'
+                      ${minScore === score
+                        ? 'bg-primary-600'
+                        : 'bg-background-card dark:bg-dark-card border border-border-light dark:border-dark-tertiary'
                       }
                     `}
                   >
                     <Text
-                      className={`text-sm ${
-                        minScore === score
+                      className={`text-sm ${minScore === score
                           ? 'text-white font-medium'
                           : 'text-text-secondary dark:text-gray-400'
-                      }`}
+                        }`}
                     >
                       {score}%+
                     </Text>

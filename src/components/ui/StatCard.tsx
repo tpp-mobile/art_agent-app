@@ -17,17 +17,17 @@ interface StatCardProps {
 const iconBgColors = {
   default: 'bg-background-tertiary dark:bg-dark-tertiary',
   primary: 'bg-primary-100 dark:bg-primary-900/30',
-  success: 'bg-green-100 dark:bg-green-900/30',
-  warning: 'bg-amber-100 dark:bg-amber-900/30',
-  error: 'bg-red-100 dark:bg-red-900/30',
+  success: 'bg-success/20 dark:bg-success/30',
+  warning: 'bg-warning/20 dark:bg-warning/30',
+  error: 'bg-error/20 dark:bg-error/30',
 };
 
 const iconColors = {
   default: 'text-text-secondary',
   primary: 'text-primary-600',
-  success: 'text-green-600',
-  warning: 'text-amber-600',
-  error: 'text-red-600',
+  success: 'text-success',
+  warning: 'text-warning',
+  error: 'text-error',
 };
 
 export function StatCard({
@@ -48,9 +48,8 @@ export function StatCard({
           {trend && (
             <View className="flex-row items-center mt-1">
               <Text
-                className={`text-sm font-medium ${
-                  trend.isPositive ? 'text-success' : 'text-error'
-                }`}
+                className={`text-sm font-medium ${trend.isPositive ? 'text-success' : 'text-error'
+                  }`}
               >
                 {trend.isPositive ? '+' : ''}{trend.value}%
               </Text>

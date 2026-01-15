@@ -16,3 +16,4 @@ export { useOnboardingStore, onboardingSteps } from './onboardingStore';
 export { useComparisonStore } from './comparisonStore';
 export { useFollowingStore } from './followingStore';
 export { useLikeStore } from './likeStore';
+export { useBidStore } from './bidStore';

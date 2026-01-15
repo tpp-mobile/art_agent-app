@@ -74,6 +74,7 @@ export default function AgentSettings() {
         style: 'destructive',
         onPress: () => {
           logout();
+          router.replace('/');
         },
       },
     ]);
@@ -92,17 +93,6 @@ export default function AgentSettings() {
     );
   };
 
-  const handleSwitchRole = () => {
-    Alert.alert('Switch Role', 'Go back to role selection?', [
-      { text: 'Cancel', style: 'cancel' },
-      {
-        text: 'Switch',
-        onPress: () => {
-          logout();
-        },
-      },
-    ]);
-  };
 
   const handleResetDemoData = () => {
     Alert.alert(
@@ -284,13 +274,6 @@ export default function AgentSettings() {
         {/* Actions */}
         <View className="px-4 mb-4">
           <Card variant="outlined" padding="none">
-            <SettingsItem
-              icon="swap-horizontal"
-              title="Switch Role"
-              subtitle="Change to Artist"
-              onPress={handleSwitchRole}
-            />
-            <View className="h-px bg-border-light dark:bg-dark-tertiary mx-4" />
             <SettingsItem
               icon="log-out"
               title="Logout"

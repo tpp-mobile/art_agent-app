@@ -109,6 +109,12 @@ export const demoArtworks: Artwork[] = [
     views: 1243,
     likes: 89,
     shortlisted: 23,
+    auctionInfo: {
+      startingPrice: 2000,
+      currentHighestBid: 2800,
+      endTime: new Date(Date.now() + 1000 * 60 * 60 * 24 * 3), // 3 days from now
+      status: 'active',
+    },
   },
   {
     id: 'art-002',
@@ -169,6 +175,12 @@ export const demoArtworks: Artwork[] = [
     views: 892,
     likes: 67,
     shortlisted: 15,
+    auctionInfo: {
+      startingPrice: 1500,
+      currentHighestBid: 1800,
+      endTime: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7), // 1 week from now
+      status: 'active',
+    },
   },
   {
     id: 'art-003',

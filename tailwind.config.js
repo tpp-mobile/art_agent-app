@@ -10,65 +10,66 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Primary Colors - Trust Green
+        // Primary Colors - Electric Blue (Modern & Trustworthy)
         primary: {
-          50: '#ecfdf5',
-          100: '#d1fae5',
-          200: '#a7f3d0',
-          300: '#6ee7b7',
-          400: '#34d399',
-          500: '#10b981',
-          600: '#059669',
-          700: '#047857',
-          800: '#065f46',
-          900: '#064e3b',
+          50: '#f0f4ff',
+          100: '#e0e9ff',
+          200: '#b8ccff',
+          300: '#8fadff',
+          400: '#5c85ff',
+          500: '#3A7DFF',
+          600: '#2563eb',
+          700: '#1d4ed8',
+          800: '#1e40af',
+          900: '#1e3a8a',
         },
-        // Accent - Deep Teal
+        // Accent Colors - Soft Terracotta (Artistic & Handcrafted)
         accent: {
-          500: '#0d9488',
-          600: '#0f766e',
-          700: '#115e59',
+          400: '#e59b81',
+          500: '#D97757',
+          600: '#c25a38',
+          700: '#a14428',
         },
         // Status Colors
-        success: '#10b981',
-        warning: '#f59e0b',
-        error: '#ef4444',
-        info: '#3b82f6',
-        // Background Colors
+        success: '#6FAF8E', // Muted Sage
+        warning: '#D97757', // Terracotta
+        error: '#C84B4B',   // Soft Red
+        info: '#3A7DFF',    // Electric Blue
+        // Background Colors - Gallery Base
         background: {
-          primary: '#ffffff',
-          secondary: '#f8fafc',
-          tertiary: '#f1f5f9',
+          primary: '#FFFDF9',   // Warm White
+          secondary: '#F2F2F2', // Soft Grey
+          tertiary: '#E0E0E0',  // Light Grey
           card: '#ffffff',
-          sidebar: '#1e293b',
+          sidebar: '#1E1E1E',   // Charcoal
         },
         // Dark mode backgrounds
         dark: {
-          primary: '#0f172a',
-          secondary: '#1e293b',
-          tertiary: '#334155',
-          card: '#1e293b',
-          sidebar: '#0f172a',
+          primary: '#121212',   // Near Black
+          secondary: '#1F1F1F', // Dark Grey
+          tertiary: '#2A2A2A',
+          card: '#1F1F1F',
+          sidebar: '#121212',
         },
         // Text Colors
         text: {
-          primary: '#0f172a',
-          secondary: '#475569',
-          tertiary: '#94a3b8',
-          inverse: '#ffffff',
+          primary: '#1E1E1E',   // Charcoal
+          secondary: '#4A4A4A',
+          tertiary: '#757575',
+          inverse: '#EDEDED',   // Off White
         },
         // Border Colors
         border: {
-          light: '#e2e8f0',
-          medium: '#cbd5e1',
-          dark: '#94a3b8',
+          light: '#E0E0E0',     // Light Grey
+          medium: '#BDBDBD',
+          dark: '#757575',
         },
       },
       fontFamily: {
-        sans: ['Inter'],
-        display: ['SpaceGrotesk'],
-        serif: ['DMSerifDisplay'],
-        mono: ['FiraCode'],
+        sans: ['Inter', 'Poppins', 'system-ui'],
+        display: ['PlayfairDisplay', 'DMSerifDisplay'],
+        serif: ['PlayfairDisplay', 'DMSerifDisplay', 'serif'],
+        mono: ['FiraCode', 'monospace'],
       },
       borderRadius: {
         sm: '0.375rem',

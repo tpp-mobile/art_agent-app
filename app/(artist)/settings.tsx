@@ -60,22 +60,12 @@ export default function ArtistSettings() {
         style: 'destructive',
         onPress: () => {
           logout();
+          router.replace('/');
         },
       },
     ]);
   };
 
-  const handleSwitchRole = () => {
-    Alert.alert('Switch Role', 'Go back to role selection?', [
-      { text: 'Cancel', style: 'cancel' },
-      {
-        text: 'Switch',
-        onPress: () => {
-          logout();
-        },
-      },
-    ]);
-  };
 
   const handleNotImplemented = (feature: string) => {
     Alert.alert('Coming Soon', `${feature} is not yet implemented in this demo.`);
@@ -204,13 +194,6 @@ export default function ArtistSettings() {
         {/* Actions */}
         <View className="px-4 mb-4">
           <Card variant="outlined" padding="none">
-            <SettingsItem
-              icon="swap-horizontal"
-              title="Switch Role"
-              subtitle="Change to Buyer or Agent"
-              onPress={handleSwitchRole}
-            />
-            <View className="h-px bg-border-light dark:bg-dark-tertiary mx-4" />
             <SettingsItem
               icon="log-out"
               title="Logout"

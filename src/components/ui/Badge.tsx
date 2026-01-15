@@ -12,20 +12,20 @@ interface BadgeProps extends ViewProps {
 }
 
 const variantClasses: Record<BadgeVariant, string> = {
-  default: 'bg-dark-tertiary',
-  success: 'bg-primary-100',
-  warning: 'bg-amber-100',
-  error: 'bg-red-100',
-  info: 'bg-blue-100',
+  default: 'bg-background-tertiary',
+  success: 'bg-success',
+  warning: 'bg-warning',
+  error: 'bg-error',
+  info: 'bg-primary-100',
   outline: 'bg-transparent border border-border-medium',
 };
 
 const variantTextClasses: Record<BadgeVariant, string> = {
-  default: 'text-white',
-  success: 'text-primary-700',
-  warning: 'text-amber-700',
-  error: 'text-red-700',
-  info: 'text-blue-700',
+  default: 'text-text-primary',
+  success: 'text-white',
+  warning: 'text-white',
+  error: 'text-white',
+  info: 'text-primary-700',
   outline: 'text-text-secondary',
 };
 

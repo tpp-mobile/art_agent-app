@@ -10,7 +10,16 @@ interface ChatState {
   getConversations: () => Conversation[];
   getConversationById: (id: string) => Conversation | undefined;
   getMessages: (conversationId: string) => Message[];
-  sendMessage: (conversationId: string, content: string, senderId: string, senderName: string, senderAvatar: string) => void;
+  sendMessage: (
+    conversationId: string,
+    content: string,
+    senderId: string,
+    senderName: string,
+    senderAvatar: string,
+    replyToId?: string,
+    replyToContent?: string,
+    replyToName?: string
+  ) => void;
   markAsRead: (conversationId: string) => void;
   setActiveConversation: (id: string | null) => void;
   startConversation: (
@@ -34,65 +43,65 @@ const mockConversations: Conversation[] = [
   {
     id: 'conv-1',
     participants: [
-      { id: 'user-1', name: 'Sarah Chen', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100', role: 'artist' },
-      { id: 'buyer-1', name: 'John Doe', avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100', role: 'buyer' },
+      { id: 'artist-1', name: 'Elena Martinez', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop', role: 'artist' },
+      { id: 'agent-1', name: 'Sarah Johnson', avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop', role: 'agent' },
     ],
     lastMessage: {
       id: 'msg-1-3',
       conversationId: 'conv-1',
-      senderId: 'user-1',
-      senderName: 'Sarah Chen',
-      senderAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100',
+      senderId: 'artist-1',
+      senderName: 'Elena Martinez',
+      senderAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop',
       content: 'Yes, I can create a custom piece in that style. Would you like to discuss the details?',
-      timestamp: new Date(Date.now() - 1000 * 60 * 30), // 30 minutes ago
+      timestamp: new Date(Date.now() - 1000 * 60 * 30),
       read: false,
       type: 'text',
     },
     unreadCount: 1,
-    artworkId: 'art-1',
+    artworkId: 'art-001',
     artworkTitle: 'Ethereal Dreams',
-    artworkThumbnail: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=200',
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24), // 1 day ago
+    artworkThumbnail: 'https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=400&h=300&fit=crop',
+    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24),
     updatedAt: new Date(Date.now() - 1000 * 60 * 30),
   },
   {
     id: 'conv-2',
     participants: [
-      { id: 'user-2', name: 'Marcus Rivera', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100', role: 'artist' },
-      { id: 'buyer-1', name: 'John Doe', avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100', role: 'buyer' },
+      { id: 'artist-2', name: 'James Chen', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop', role: 'artist' },
+      { id: 'agent-1', name: 'Sarah Johnson', avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop', role: 'agent' },
     ],
     lastMessage: {
       id: 'msg-2-2',
       conversationId: 'conv-2',
-      senderId: 'buyer-1',
-      senderName: 'John Doe',
-      senderAvatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100',
+      senderId: 'agent-1',
+      senderName: 'Sarah Johnson',
+      senderAvatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop',
       content: 'That sounds great! I\'ll proceed with the purchase.',
-      timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2), // 2 hours ago
+      timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2),
       read: true,
       type: 'text',
     },
     unreadCount: 0,
-    artworkId: 'art-2',
-    artworkTitle: 'Urban Sunset',
-    artworkThumbnail: 'https://images.unsplash.com/photo-1549887534-1541e9326642?w=200',
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 48), // 2 days ago
+    artworkId: 'art-002',
+    artworkTitle: 'Urban Solitude',
+    artworkThumbnail: 'https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=400&h=300&fit=crop',
+    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 48),
     updatedAt: new Date(Date.now() - 1000 * 60 * 60 * 2),
   },
   {
     id: 'conv-3',
     participants: [
-      { id: 'user-3', name: 'Elena Popov', avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100', role: 'artist' },
-      { id: 'buyer-1', name: 'John Doe', avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100', role: 'buyer' },
+      { id: 'artist-1', name: 'Elena Martinez', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop', role: 'artist' },
+      { id: 'agent-1', name: 'Sarah Johnson', avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop', role: 'agent' },
     ],
     lastMessage: {
       id: 'msg-3-1',
       conversationId: 'conv-3',
-      senderId: 'user-3',
-      senderName: 'Elena Popov',
-      senderAvatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100',
+      senderId: 'artist-1',
+      senderName: 'Elena Martinez',
+      senderAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop',
       content: 'Thank you for your interest in my work!',
-      timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3), // 3 days ago
+      timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3),
       read: true,
       type: 'text',
     },
@@ -108,33 +117,33 @@ const mockMessages: Record<string, Message[]> = {
     {
       id: 'msg-1-1',
       conversationId: 'conv-1',
-      senderId: 'buyer-1',
-      senderName: 'John Doe',
-      senderAvatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100',
-      content: 'Hi Sarah! I love your artwork "Ethereal Dreams". Is it still available?',
-      timestamp: new Date(Date.now() - 1000 * 60 * 60), // 1 hour ago
+      senderId: 'agent-1',
+      senderName: 'Sarah Johnson',
+      senderAvatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop',
+      content: 'Hi Elena! I love your artwork "Ethereal Dreams". Is it still available?',
+      timestamp: new Date(Date.now() - 1000 * 60 * 60),
       read: true,
       type: 'text',
     },
     {
       id: 'msg-1-2',
       conversationId: 'conv-1',
-      senderId: 'buyer-1',
-      senderName: 'John Doe',
-      senderAvatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100',
+      senderId: 'agent-1',
+      senderName: 'Sarah Johnson',
+      senderAvatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop',
       content: 'Also, do you take commissions? I\'d love something similar for my living room.',
-      timestamp: new Date(Date.now() - 1000 * 60 * 45), // 45 minutes ago
+      timestamp: new Date(Date.now() - 1000 * 60 * 45),
       read: true,
       type: 'text',
     },
     {
       id: 'msg-1-3',
       conversationId: 'conv-1',
-      senderId: 'user-1',
-      senderName: 'Sarah Chen',
-      senderAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100',
+      senderId: 'artist-1',
+      senderName: 'Elena Martinez',
+      senderAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop',
       content: 'Yes, I can create a custom piece in that style. Would you like to discuss the details?',
-      timestamp: new Date(Date.now() - 1000 * 60 * 30), // 30 minutes ago
+      timestamp: new Date(Date.now() - 1000 * 60 * 30),
       read: false,
       type: 'text',
     },
@@ -143,22 +152,22 @@ const mockMessages: Record<string, Message[]> = {
     {
       id: 'msg-2-1',
       conversationId: 'conv-2',
-      senderId: 'user-2',
-      senderName: 'Marcus Rivera',
-      senderAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100',
+      senderId: 'artist-2',
+      senderName: 'James Chen',
+      senderAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop',
       content: 'Thanks for reaching out! The piece includes a certificate of authenticity and free shipping.',
-      timestamp: new Date(Date.now() - 1000 * 60 * 60 * 3), // 3 hours ago
+      timestamp: new Date(Date.now() - 1000 * 60 * 60 * 3),
       read: true,
       type: 'text',
     },
     {
       id: 'msg-2-2',
       conversationId: 'conv-2',
-      senderId: 'buyer-1',
-      senderName: 'John Doe',
-      senderAvatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100',
+      senderId: 'agent-1',
+      senderName: 'Sarah Johnson',
+      senderAvatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop',
       content: 'That sounds great! I\'ll proceed with the purchase.',
-      timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2), // 2 hours ago
+      timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2),
       read: true,
       type: 'text',
     },
@@ -167,11 +176,11 @@ const mockMessages: Record<string, Message[]> = {
     {
       id: 'msg-3-1',
       conversationId: 'conv-3',
-      senderId: 'user-3',
-      senderName: 'Elena Popov',
-      senderAvatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100',
+      senderId: 'artist-1',
+      senderName: 'Elena Martinez',
+      senderAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop',
       content: 'Thank you for your interest in my work!',
-      timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3), // 3 days ago
+      timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3),
       read: true,
       type: 'text',
     },
@@ -198,7 +207,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
     return get().messages[conversationId] || [];
   },
 
-  sendMessage: (conversationId, content, senderId, senderName, senderAvatar) => {
+  sendMessage: (conversationId, content, senderId, senderName, senderAvatar, replyToId, replyToContent, replyToName) => {
     const newMessage: Message = {
       id: `msg-${Date.now()}`,
       conversationId,
@@ -209,6 +218,9 @@ export const useChatStore = create<ChatState>((set, get) => ({
       timestamp: new Date(),
       read: true,
       type: 'text',
+      replyToId,
+      replyToContent,
+      replyToName,
     };
 
     set(state => ({

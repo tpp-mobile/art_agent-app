@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, RefreshControl } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, RefreshControl, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -38,8 +38,10 @@ export default function ArtistDashboard() {
   const avgScore =
     verifiedWithScores.length > 0
       ? verifiedWithScores.reduce((sum, a) => sum + (a.verificationResult?.humanScore || 0), 0) /
-        verifiedWithScores.length
+      verifiedWithScores.length
       : 0;
+
+  const flaggedArtworks = artistArtworks.filter(a => a.status === 'flagged');
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
@@ -49,6 +51,26 @@ export default function ArtistDashboard() {
 
   const handleLogout = () => {
     logout();
+    router.replace('/');
+  };
+
+  const handleAppeal = (artworkId: string) => {
+    // In a real app, this would open a form to submit evidence
+    Alert.alert(
+      'Appeal Flagged Status',
+      'You are about to appeal the "AI Suspected" flag. This will send your artwork for manual review by an admin. Please ensure you have uploaded all available process proofs.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Submit Appeal',
+          onPress: () => {
+            // Mock status update would happen here
+            // updateArtworkStatus(artworkId, 'in_review');
+            Alert.alert('Appeal Submitted', 'Your artwork is now under manual review.');
+          }
+        }
+      ]
+    );
   };
 
   return (
@@ -78,14 +100,14 @@ export default function ArtistDashboard() {
               <Ionicons
                 name={effectiveTheme === 'dark' ? 'sunny' : 'moon'}
                 size={22}
-                color={effectiveTheme === 'dark' ? '#f59e0b' : '#64748b'}
+                color={effectiveTheme === 'dark' ? '#FFD700' : '#4A4A4A'}
               />
             </TouchableOpacity>
             <TouchableOpacity
               onPress={handleLogout}
               className="w-10 h-10 rounded-full bg-background-card dark:bg-dark-card items-center justify-center"
             >
-              <Ionicons name="log-out-outline" size={22} color="#64748b" />
+              <Ionicons name="log-out-outline" size={22} color="#1E1E1E" />
             </TouchableOpacity>
           </View>
         </View>
@@ -117,7 +139,7 @@ export default function ArtistDashboard() {
               <StatCard
                 title="Total Artworks"
                 value={artistArtworks.length}
-                icon={<Ionicons name="images" size={20} color="#059669" />}
+                icon={<Ionicons name="images" size={20} color="#3A7DFF" />}
                 color="primary"
               />
             </View>
@@ -125,7 +147,7 @@ export default function ArtistDashboard() {
               <StatCard
                 title="Verified"
                 value={verifiedCount}
-                icon={<Ionicons name="checkmark-circle" size={20} color="#10b981" />}
+                icon={<Ionicons name="checkmark-circle" size={20} color="#6FAF8E" />}
                 color="success"
               />
             </View>
@@ -133,7 +155,7 @@ export default function ArtistDashboard() {
               <StatCard
                 title="Pending Review"
                 value={pendingCount}
-                icon={<Ionicons name="time" size={20} color="#f59e0b" />}
+                icon={<Ionicons name="time" size={20} color="#D97757" />}
                 color="warning"
               />
             </View>
@@ -141,12 +163,43 @@ export default function ArtistDashboard() {
               <StatCard
                 title="Total Views"
                 value={artistArtworks.reduce((sum, a) => sum + a.views, 0).toLocaleString()}
-                icon={<Ionicons name="eye" size={20} color="#3b82f6" />}
+                icon={<Ionicons name="eye" size={20} color="#3A7DFF" />}
                 color="default"
               />
             </View>
           </View>
         </View>
+
+        {/* Action Required: Flagged Artworks */}
+        {flaggedArtworks.length > 0 && (
+          <View className="px-4 mb-4">
+            <View className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-900/50 rounded-xl p-4">
+              <View className="flex-row items-center mb-2">
+                <Ionicons name="alert-circle" size={24} color="#C84B4B" />
+                <Text className="text-lg font-bold text-red-700 dark:text-red-400 ml-2">Action Required</Text>
+              </View>
+              <Text className="text-sm text-red-600 dark:text-red-300 mb-3">
+                {flaggedArtworks.length} artwork{flaggedArtworks.length > 1 ? 's have' : ' has'} been flagged as potentially AI-generated.
+              </Text>
+
+              {flaggedArtworks.map(artwork => (
+                <View key={artwork.id} className="bg-white dark:bg-black/20 rounded-lg p-3 mb-2 flex-row items-center">
+                  <View className="flex-1">
+                    <Text className="font-semibold text-text-primary dark:text-text-inverse">{artwork.title}</Text>
+                    <Text className="text-xs text-text-tertiary">Flagged on {artwork.uploadedAt.toLocaleDateString()}</Text>
+                  </View>
+                  <Button
+                    title="Appeal"
+                    size="sm"
+                    variant="outline"
+                    onPress={() => handleAppeal(artwork.id)}
+                    style={{ borderColor: '#C84B4B' }}
+                  />
+                </View>
+              ))}
+            </View>
+          </View>
+        )}
 
         {/* Quick Actions */}
         <View className="px-4 mb-4">
@@ -159,7 +212,7 @@ export default function ArtistDashboard() {
               <Card variant="outlined" padding="md">
                 <View className="items-center">
                   <View className="w-12 h-12 bg-primary-100 dark:bg-primary-900/30 rounded-full items-center justify-center mb-2">
-                    <Ionicons name="cloud-upload" size={24} color="#059669" />
+                    <Ionicons name="cloud-upload" size={24} color="#3A7DFF" />
                   </View>
                   <Text className="text-sm font-medium text-text-primary dark:text-text-inverse">Upload Art</Text>
                 </View>
@@ -172,7 +225,7 @@ export default function ArtistDashboard() {
               <Card variant="outlined" padding="md">
                 <View className="items-center">
                   <View className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-full items-center justify-center mb-2">
-                    <Ionicons name="ribbon" size={24} color="#3b82f6" />
+                    <Ionicons name="ribbon" size={24} color="#3A7DFF" />
                   </View>
                   <Text className="text-sm font-medium text-text-primary dark:text-text-inverse">Certificates</Text>
                 </View>

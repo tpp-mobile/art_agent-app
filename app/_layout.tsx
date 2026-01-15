@@ -9,65 +9,68 @@ import { ToastContainer } from '../src/components/ui/Toast';
 import { useThemeStore, useAuthStore } from '../src/stores';
 import '../global.css';
 
-export default function RootLayout() {
-  const systemColorScheme = useSystemColorScheme();
-  const { setColorScheme } = useColorScheme();
-  const { effectiveTheme, mode, setMode } = useThemeStore();
+function AuthNavigator() {
   const { isAuthenticated } = useAuthStore();
-  const router = useRouter();
   const segments = useSegments();
+  const router = useRouter();
 
-  // Sync NativeWind color scheme with theme store
-  useEffect(() => {
-    setColorScheme(effectiveTheme);
-  }, [effectiveTheme, setColorScheme]);
-
-  // Update theme when system changes
-  useEffect(() => {
-    if (mode === 'system') {
-      setMode('system'); // This will recalculate effective theme
-    }
-  }, [systemColorScheme]);
-
-  // Handle auth state changes - redirect to landing when logged out
   useEffect(() => {
     const inAuthGroup = segments[0] === '(artist)' || segments[0] === '(agent)';
 
     if (!isAuthenticated && inAuthGroup) {
-      // User logged out while in a protected route, redirect to landing
       router.replace('/');
     }
   }, [isAuthenticated, segments]);
 
   return (
+    <Stack
+      screenOptions={{
+        headerShown: false,
+        animation: 'slide_from_right',
+      }}
+    >
+      <Stack.Screen name="index" />
+      <Stack.Screen name="(auth)" />
+      <Stack.Screen name="(artist)" />
+      <Stack.Screen name="(agent)" />
+      <Stack.Screen
+        name="artwork/[id]"
+        options={{
+          presentation: 'card',
+          animation: 'slide_from_bottom',
+        }}
+      />
+      <Stack.Screen
+        name="chat/[id]"
+        options={{
+          presentation: 'card',
+          animation: 'slide_from_right',
+        }}
+      />
+    </Stack>
+  );
+}
+
+export default function RootLayout() {
+  const systemColorScheme = useSystemColorScheme();
+  const { setColorScheme } = useColorScheme();
+  const { effectiveTheme, mode, setMode } = useThemeStore();
+
+  useEffect(() => {
+    setColorScheme(effectiveTheme);
+  }, [effectiveTheme, setColorScheme]);
+
+  useEffect(() => {
+    if (mode === 'system') {
+      setMode('system');
+    }
+  }, [systemColorScheme]);
+
+  return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
         <StatusBar style={effectiveTheme === 'dark' ? 'light' : 'dark'} />
-        <Stack
-          screenOptions={{
-            headerShown: false,
-            animation: 'slide_from_right',
-          }}
-        >
-          <Stack.Screen name="index" />
-          <Stack.Screen name="(auth)" />
-          <Stack.Screen name="(artist)" />
-          <Stack.Screen name="(agent)" />
-          <Stack.Screen
-            name="artwork/[id]"
-            options={{
-              presentation: 'card',
-              animation: 'slide_from_bottom',
-            }}
-          />
-          <Stack.Screen
-            name="chat/[id]"
-            options={{
-              presentation: 'card',
-              animation: 'slide_from_right',
-            }}
-          />
-        </Stack>
+        <AuthNavigator />
         <ToastContainer />
       </SafeAreaProvider>
     </GestureHandlerRootView>

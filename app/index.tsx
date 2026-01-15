@@ -26,18 +26,18 @@ export default function LandingScreen() {
   }, [isAuthenticated, user]);
 
   return (
-    <SafeAreaView className="flex-1 bg-background-secondary">
+    <SafeAreaView className="flex-1 bg-background-primary">
       <ScrollView
-        contentContainerStyle={{ flexGrow: 1 }}
+        contentContainerStyle={{ flexGrow: 1, backgroundColor: '#FFFDF9' }}
         showsVerticalScrollIndicator={false}
       >
         {/* Hero Section */}
         <View className="px-6 pt-8 pb-6">
           <View className="flex-row items-center mb-2">
             <View className="w-10 h-10 bg-primary-500 rounded-xl items-center justify-center mr-3">
-              <Ionicons name="shield-checkmark" size={24} color="#ffffff" />
+              <Ionicons name="shield-checkmark" size={24} color="#FFFDF9" />
             </View>
-            <Text className="text-2xl font-bold text-text-primary">Art Agent</Text>
+            <Text className="text-2xl font-bold text-text-primary" style={{ fontFamily: 'PlayfairDisplay' }}>Art Agent</Text>
           </View>
 
           <Text className="text-4xl font-bold text-text-primary mt-6 leading-tight">
@@ -67,7 +67,7 @@ export default function LandingScreen() {
                   <Ionicons
                     name={feature.icon as keyof typeof Ionicons.glyphMap}
                     size={18}
-                    color="#059669"
+                    color="#3A7DFF"
                   />
                 </View>
                 <Text className="text-sm text-text-secondary ml-2">
@@ -90,13 +90,13 @@ export default function LandingScreen() {
                 icon: 'brush',
                 title: 'Artists',
                 description: 'Upload and verify your artwork to prove human creation',
-                color: '#10b981',
+                color: '#D97757',
               },
               {
                 icon: 'images',
                 title: 'Agents / Buyers',
                 description: 'Discover, verify, and collect authentic human-created artworks',
-                color: '#3b82f6',
+                color: '#3A7DFF',
               },
             ].map((role, index) => (
               <View
@@ -127,12 +127,12 @@ export default function LandingScreen() {
           <Link href="/(auth)/login" asChild>
             <TouchableOpacity activeOpacity={0.9}>
               <LinearGradient
-                colors={['#10b981', '#059669']}
+                colors={['#3A7DFF', '#2563eb']}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
                 style={{ borderRadius: 12, padding: 16 }}
               >
-                <Text style={{ color: '#ffffff', textAlign: 'center', fontWeight: 'bold', fontSize: 18 }}>
+                <Text style={{ color: '#FFFDF9', textAlign: 'center', fontWeight: 'bold', fontSize: 18 }}>
                   Sign In
                 </Text>
               </LinearGradient>
@@ -155,7 +155,7 @@ export default function LandingScreen() {
         <View className="px-6 py-4 mb-4">
           <View className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl">
             <View className="flex-row items-center mb-2">
-              <Ionicons name="information-circle" size={20} color="#3b82f6" />
+              <Ionicons name="information-circle" size={20} color="#3A7DFF" />
               <Text className="text-blue-700 dark:text-blue-400 font-semibold ml-2">
                 Demo Credentials
               </Text>

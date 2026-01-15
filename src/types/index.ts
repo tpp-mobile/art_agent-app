@@ -61,6 +61,27 @@ export interface VerificationResult {
   verifiedBy?: string;
 }
 
+export type BidStatus = 'pending' | 'accepted' | 'rejected' | 'outbid';
+
+export interface Bid {
+  id: string;
+  artworkId: string;
+  bidderId: string;
+  bidderName: string;
+  bidderAvatar: string;
+  amount: number;
+  timestamp: Date;
+  status: BidStatus;
+}
+
+export interface AuctionInfo {
+  startingPrice: number;
+  currentHighestBid?: number;
+  reservePrice?: number;
+  endTime: Date;
+  status: 'active' | 'ended' | 'awaiting_payment';
+}
+
 // Artwork Interface
 export interface Artwork {
   id: string;
@@ -82,6 +103,7 @@ export interface Artwork {
   edition?: string;
   dimensions?: string;
   price?: number;
+  auctionInfo?: AuctionInfo;
   licenseType?: LicenseType;
   tags: string[];
   views: number;
@@ -133,6 +155,9 @@ export interface Message {
   read: boolean;
   type: 'text' | 'image' | 'artwork';
   artworkId?: string;
+  replyToId?: string;
+  replyToContent?: string;
+  replyToName?: string;
 }
 
 export interface Conversation {
