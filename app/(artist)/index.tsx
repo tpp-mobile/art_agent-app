@@ -53,7 +53,7 @@ export default function ArtistDashboard() {
 
   const handleLogout = () => {
     logout();
-    router.replace('/');
+    router.replace('/(auth)/login');
   };
 
   const handleAppeal = (artworkId: string) => {

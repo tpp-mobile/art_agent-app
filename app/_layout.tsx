@@ -20,7 +20,7 @@ function AuthNavigator() {
     const inAuthGroup = segments[0] === '(artist)' || segments[0] === '(agent)';
 
     if (!isAuthenticated && inAuthGroup) {
-      router.replace('/');
+      router.replace('/(auth)/login');
     }
   }, [isAuthenticated, segments]);
 

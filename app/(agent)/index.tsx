@@ -42,6 +42,7 @@ export default function AgentDashboard() {
 
   const handleLogout = () => {
     logout();
+    router.replace('/(auth)/login');
   };
 
   return (
