@@ -8,7 +8,7 @@ import {
   Alert,
   Image as RNImage,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
@@ -33,6 +33,7 @@ export default function ArtworkUpload() {
   const router = useRouter();
   const { user } = useAuthStore();
   const { addArtwork } = useArtworkStore();
+  const insets = useSafeAreaInsets();
 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -140,7 +141,7 @@ export default function ArtworkUpload() {
 
   return (
     <SafeAreaView className="flex-1 bg-background-secondary dark:bg-dark-primary" edges={['top']}>
-      <ScrollView contentContainerStyle={{ padding: 16, paddingBottom: 100 }}>
+      <ScrollView contentContainerStyle={{ padding: 16, paddingBottom: 80 + insets.bottom }}>
         {/* Header */}
         <View className="mb-6">
           <Text className="text-2xl font-bold text-text-primary dark:text-text-inverse">Upload Artwork</Text>

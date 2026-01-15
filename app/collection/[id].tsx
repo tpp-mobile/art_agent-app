@@ -10,15 +10,18 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { useCollectionsStore, useArtworkStore } from '../../src/stores';
+import { useCollectionsStore, useArtworkStore, useThemeStore } from '../../src/stores';
 import { Card, Button, Input } from '../../src/components/ui';
 import { ArtworkCard } from '../../src/components/artwork';
+import { colors } from '../../src/constants/theme';
 
 export default function CollectionDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const { getCollection, updateCollection, removeFromCollection, deleteCollection } = useCollectionsStore();
   const { getArtworkById } = useArtworkStore();
+  const { effectiveTheme } = useThemeStore();
+  const isDark = effectiveTheme === 'dark';
 
   const [showEditModal, setShowEditModal] = useState(false);
   const [editName, setEditName] = useState('');
@@ -103,7 +106,7 @@ export default function CollectionDetail() {
       {/* Header */}
       <View className="flex-row items-center px-4 py-4">
         <TouchableOpacity onPress={() => router.back()} className="mr-4">
-          <Ionicons name="arrow-back" size={24} color="#64748b" />
+          <Ionicons name="arrow-back" size={24} color={isDark ? colors.dark.textSecondary : "#64748b"} />
         </TouchableOpacity>
         <View className="flex-1">
           <Text className="text-xl font-bold text-text-primary dark:text-text-inverse">
@@ -116,7 +119,7 @@ export default function CollectionDetail() {
           )}
         </View>
         <TouchableOpacity onPress={handleEdit} className="mr-2">
-          <Ionicons name="pencil" size={22} color="#64748b" />
+          <Ionicons name="pencil" size={22} color={isDark ? colors.dark.textSecondary : "#64748b"} />
         </TouchableOpacity>
         <TouchableOpacity onPress={handleDeleteCollection}>
           <Ionicons name="trash-outline" size={22} color="#ef4444" />
@@ -181,7 +184,7 @@ export default function CollectionDetail() {
               Edit Collection
             </Text>
             <TouchableOpacity onPress={() => setShowEditModal(false)}>
-              <Ionicons name="close" size={28} color="#64748b" />
+              <Ionicons name="close" size={28} color={isDark ? colors.dark.textPrimary : "#64748b"} />
             </TouchableOpacity>
           </View>
 

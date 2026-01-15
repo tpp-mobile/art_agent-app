@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, RefreshControl } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuthStore, useArtworkStore, useShortlistStore, useThemeStore, useOnboardingStore, useAppNotificationStore } from '../../src/stores';
 import { StatCard, Card, Avatar } from '../../src/components/ui';
 import { ArtworkCard } from '../../src/components/artwork';
 import { OnboardingModal } from '../../src/components/onboarding';
+import { colors } from '../../src/constants/theme';
 
 export default function AgentDashboard() {
   const router = useRouter();
@@ -16,6 +17,7 @@ export default function AgentDashboard() {
   const { effectiveTheme, toggleTheme } = useThemeStore();
   const { hasSeenOnboarding } = useOnboardingStore();
   const { getUnreadCount } = useAppNotificationStore();
+  const insets = useSafeAreaInsets();
   const [refreshing, setRefreshing] = React.useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
 
@@ -43,9 +45,9 @@ export default function AgentDashboard() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-background-secondary dark:bg-dark-primary">
+    <SafeAreaView className="flex-1 bg-background-secondary dark:bg-dark-primary" edges={['top', 'left', 'right']}>
       <ScrollView
-        contentContainerStyle={{ paddingBottom: 100 }}
+        contentContainerStyle={{ paddingBottom: 80 + insets.bottom }}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
@@ -89,7 +91,7 @@ export default function AgentDashboard() {
               onPress={handleLogout}
               className="w-10 h-10 rounded-full bg-background-card dark:bg-dark-card items-center justify-center"
             >
-              <Ionicons name="log-out-outline" size={22} color="#64748b" />
+              <Ionicons name="log-out-outline" size={22} color={effectiveTheme === 'dark' ? colors.dark.textSecondary : '#64748b'} />
             </TouchableOpacity>
           </View>
         </View>

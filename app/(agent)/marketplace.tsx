@@ -7,12 +7,13 @@ import {
   Modal,
   ScrollView,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { useArtworkStore, useComparisonStore } from '../../src/stores';
+import { useArtworkStore, useComparisonStore, useThemeStore } from '../../src/stores';
 import { SearchInput, Button, Card } from '../../src/components/ui';
 import { ArtworkCard } from '../../src/components/artwork';
+import { colors } from '../../src/constants/theme';
 import { ArtworkMedium, VerificationStatus } from '../../src/types';
 
 const mediumOptions: ArtworkMedium[] = [
@@ -36,6 +37,8 @@ export default function Marketplace() {
   const router = useRouter();
   const { verifiedArtworks } = useArtworkStore();
   const { isCompareMode, toggleCompareMode, selectedIds, clearComparison } = useComparisonStore();
+  const { effectiveTheme } = useThemeStore();
+  const isDark = effectiveTheme === 'dark';
   const [searchQuery, setSearchQuery] = useState('');
   const [showFilters, setShowFilters] = useState(false);
   const [selectedMediums, setSelectedMediums] = useState<ArtworkMedium[]>([]);
@@ -43,6 +46,7 @@ export default function Marketplace() {
   const [maxPrice, setMaxPrice] = useState<number | null>(null);
   const [minScore, setMinScore] = useState<number | null>(null);
   const [sortBy, setSortBy] = useState('recent');
+  const insets = useSafeAreaInsets();
 
   const verified = verifiedArtworks();
 
@@ -149,7 +153,7 @@ export default function Marketplace() {
             <Ionicons
               name="git-compare-outline"
               size={18}
-              color={isCompareMode ? '#FFFDF9' : '#1E1E1E'}
+              color={isCompareMode ? '#FFFDF9' : (isDark ? colors.dark.textSecondary : '#1E1E1E')}
             />
             <Text className={`text-sm font-medium ml-1 ${isCompareMode ? 'text-white' : 'text-text-secondary dark:text-gray-400'}`}>
               Compare
@@ -210,7 +214,7 @@ export default function Marketplace() {
             <Ionicons
               name="options"
               size={24}
-              color={hasActiveFilters ? '#FFFDF9' : '#1E1E1E'}
+              color={hasActiveFilters ? '#FFFDF9' : (isDark ? colors.dark.textSecondary : '#1E1E1E')}
             />
           </TouchableOpacity>
         </View>
@@ -248,7 +252,7 @@ export default function Marketplace() {
         data={filteredArtworks}
         keyExtractor={item => item.id}
         numColumns={2}
-        contentContainerStyle={{ padding: 16, paddingBottom: 100 }}
+        contentContainerStyle={{ padding: 16, paddingBottom: 80 + insets.bottom }}
         columnWrapperStyle={{ justifyContent: 'space-between' }}
         renderItem={({ item }) => (
           <ArtworkCard
@@ -287,7 +291,7 @@ export default function Marketplace() {
           <View className="flex-row items-center justify-between px-4 py-4 border-b border-border-light dark:border-dark-tertiary">
             <Text className="text-xl font-bold text-text-primary dark:text-text-inverse">Filters</Text>
             <TouchableOpacity onPress={() => setShowFilters(false)}>
-              <Ionicons name="close" size={28} color="#1E1E1E" />
+              <Ionicons name="close" size={28} color={isDark ? colors.dark.textPrimary : '#1E1E1E'} />
             </TouchableOpacity>
           </View>
 
@@ -312,8 +316,8 @@ export default function Marketplace() {
                   >
                     <Text
                       className={`text-sm ${selectedMediums.includes(medium)
-                          ? 'text-white font-medium'
-                          : 'text-text-secondary dark:text-gray-400'
+                        ? 'text-white font-medium'
+                        : 'text-text-secondary dark:text-gray-400'
                         }`}
                     >
                       {medium}
@@ -351,8 +355,8 @@ export default function Marketplace() {
                   >
                     <Text
                       className={`text-sm ${minPrice === range.min && maxPrice === range.max
-                          ? 'text-white font-medium'
-                          : 'text-text-secondary dark:text-gray-400'
+                        ? 'text-white font-medium'
+                        : 'text-text-secondary dark:text-gray-400'
                         }`}
                     >
                       {range.label}
@@ -382,8 +386,8 @@ export default function Marketplace() {
                   >
                     <Text
                       className={`text-sm ${minScore === score
-                          ? 'text-white font-medium'
-                          : 'text-text-secondary dark:text-gray-400'
+                        ? 'text-white font-medium'
+                        : 'text-text-secondary dark:text-gray-400'
                         }`}
                     >
                       {score}%+

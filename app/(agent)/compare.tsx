@@ -4,9 +4,9 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
-  Dimensions,
+  useWindowDimensions,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
@@ -14,7 +14,6 @@ import { useComparisonStore, useArtworkStore, useShortlistStore } from '../../sr
 import { Card, Button, Badge } from '../../src/components/ui';
 import { Artwork } from '../../src/types';
 
-const { width } = Dimensions.get('window');
 
 function ComparisonCard({ artwork, onRemove }: { artwork: Artwork; onRemove: () => void }) {
   const router = useRouter();
@@ -70,16 +69,15 @@ function ComparisonCard({ artwork, onRemove }: { artwork: Artwork; onRemove: () 
 
           {/* Medium */}
           <View className="mt-2">
-            <Badge variant="default" size="sm">{artwork.medium}</Badge>
+            <Badge variant="default" size="sm" label={artwork.medium} />
           </View>
 
           {/* Actions */}
           <View className="flex-row mt-3">
             <TouchableOpacity
               onPress={() => toggle(artwork.id)}
-              className={`flex-1 flex-row items-center justify-center py-2 rounded-lg mr-1 ${
-                saved ? 'bg-primary-100 dark:bg-primary-900/30' : 'bg-background-tertiary dark:bg-dark-tertiary'
-              }`}
+              className={`flex-1 flex-row items-center justify-center py-2 rounded-lg mr-1 ${saved ? 'bg-primary-100 dark:bg-primary-900/30' : 'bg-background-tertiary dark:bg-dark-tertiary'
+                }`}
             >
               <Ionicons
                 name={saved ? 'heart' : 'heart-outline'}
@@ -120,15 +118,17 @@ function ComparisonRow({ label, values }: { label: string; values: (string | num
 }
 
 export default function CompareScreen() {
+  const { width } = useWindowDimensions();
   const router = useRouter();
   const { selectedIds, removeFromComparison, clearComparison } = useComparisonStore();
   const { getArtworkById } = useArtworkStore();
+  const insets = useSafeAreaInsets();
 
   const artworks = selectedIds.map(id => getArtworkById(id)).filter(Boolean) as Artwork[];
 
   if (artworks.length === 0) {
     return (
-      <SafeAreaView className="flex-1 bg-background-secondary dark:bg-dark-primary" edges={['top']}>
+      <SafeAreaView className="flex-1 bg-background-secondary dark:bg-dark-primary" edges={['top', 'left', 'right']}>
         <View className="flex-row items-center px-4 py-4">
           <TouchableOpacity onPress={() => router.back()} className="mr-4">
             <Ionicons name="arrow-back" size={24} color="#64748b" />
@@ -158,7 +158,7 @@ export default function CompareScreen() {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-background-secondary dark:bg-dark-primary" edges={['top']}>
+    <SafeAreaView className="flex-1 bg-background-secondary dark:bg-dark-primary" edges={['top', 'left', 'right']}>
       {/* Header */}
       <View className="flex-row items-center justify-between px-4 py-4">
         <View className="flex-row items-center">
@@ -174,7 +174,7 @@ export default function CompareScreen() {
         </TouchableOpacity>
       </View>
 
-      <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
+      <ScrollView contentContainerStyle={{ paddingBottom: 80 + insets.bottom }}>
         {/* Artwork Cards */}
         <View className="flex-row px-3 mb-6">
           {artworks.map(artwork => (

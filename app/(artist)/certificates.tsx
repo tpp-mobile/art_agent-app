@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, ScrollView, FlatList, TouchableOpacity, Share } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuthStore, useArtworkStore } from '../../src/stores';
 import { Card, Badge, Avatar } from '../../src/components/ui';
@@ -92,6 +92,7 @@ function CertificateCard({ artwork }: { artwork: Artwork }) {
 export default function ArtistCertificates() {
   const { user } = useAuthStore();
   const { getArtworksByArtist } = useArtworkStore();
+  const insets = useSafeAreaInsets();
 
   const artistArtworks = user ? getArtworksByArtist(user.id) : [];
   const verifiedArtworks = artistArtworks.filter(
@@ -99,7 +100,7 @@ export default function ArtistCertificates() {
   );
 
   return (
-    <SafeAreaView className="flex-1 bg-background-secondary dark:bg-dark-primary" edges={['top']}>
+    <SafeAreaView className="flex-1 bg-background-secondary dark:bg-dark-primary" edges={['top', 'left', 'right']}>
       {/* Header */}
       <View className="px-4 py-4">
         <Text className="text-2xl font-bold text-text-primary dark:text-text-inverse">Certificates</Text>
@@ -132,7 +133,7 @@ export default function ArtistCertificates() {
       <FlatList
         data={verifiedArtworks}
         keyExtractor={item => item.id}
-        contentContainerStyle={{ padding: 16, paddingBottom: 100 }}
+        contentContainerStyle={{ padding: 16, paddingBottom: 80 + insets.bottom }}
         renderItem={({ item }) => <CertificateCard artwork={item} />}
         ListEmptyComponent={
           <View className="items-center py-12">

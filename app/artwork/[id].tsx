@@ -5,21 +5,21 @@ import {
   ScrollView,
   Image,
   TouchableOpacity,
-  Dimensions,
+  useWindowDimensions,
   Share,
   Modal,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { useArtworkStore, useShortlistStore, useAuthStore, useChatStore, useLikeStore } from '../../src/stores';
+import { useArtworkStore, useShortlistStore, useAuthStore, useChatStore, useLikeStore, useThemeStore } from '../../src/stores';
 import { showSuccess } from '../../src/stores/notificationStore';
 import { Card, Badge, StatusBadge, Avatar, Button, Progress } from '../../src/components/ui';
+import { colors } from '../../src/constants/theme';
 import { ProcessProof } from '../../src/types';
 
-const { width, height } = Dimensions.get('window');
-
 export default function ArtworkDetail() {
+  const { width, height } = useWindowDimensions();
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const { getArtworkById } = useArtworkStore();
@@ -27,6 +27,8 @@ export default function ArtworkDetail() {
   const { toggle: toggleLike, isLiked } = useLikeStore();
   const { user } = useAuthStore();
   const { startConversation } = useChatStore();
+  const { effectiveTheme } = useThemeStore();
+  const isDark = effectiveTheme === 'dark';
   const [selectedProof, setSelectedProof] = React.useState<ProcessProof | null>(null);
 
   const artwork = getArtworkById(id || '');
@@ -112,7 +114,7 @@ export default function ArtworkDetail() {
           onPress={() => router.back()}
           className="w-10 h-10 rounded-full bg-background-card dark:bg-dark-card items-center justify-center"
         >
-          <Ionicons name="arrow-back" size={24} color="#1E1E1E" />
+          <Ionicons name="arrow-back" size={24} color={isDark ? colors.dark.textPrimary : '#1E1E1E'} />
         </TouchableOpacity>
         <View className="flex-row">
           <TouchableOpacity
@@ -122,7 +124,7 @@ export default function ArtworkDetail() {
             <Ionicons
               name={shortlisted ? 'bookmark' : 'bookmark-outline'}
               size={24}
-              color={shortlisted ? '#D97757' : '#1E1E1E'}
+              color={shortlisted ? '#D97757' : (isDark ? colors.dark.textPrimary : '#1E1E1E')}
             />
           </TouchableOpacity>
           <TouchableOpacity
@@ -132,14 +134,14 @@ export default function ArtworkDetail() {
             <Ionicons
               name={liked ? 'heart' : 'heart-outline'}
               size={24}
-              color={liked ? '#C84B4B' : '#1E1E1E'}
+              color={liked ? '#C84B4B' : (isDark ? colors.dark.textPrimary : '#1E1E1E')}
             />
           </TouchableOpacity>
           <TouchableOpacity
             onPress={handleShare}
             className="w-10 h-10 rounded-full bg-background-card dark:bg-dark-card items-center justify-center"
           >
-            <Ionicons name="share-outline" size={24} color="#1E1E1E" />
+            <Ionicons name="share-outline" size={24} color={isDark ? colors.dark.textPrimary : '#1E1E1E'} />
           </TouchableOpacity>
         </View>
       </View>
@@ -368,21 +370,21 @@ export default function ArtworkDetail() {
           {/* Stats */}
           <View className="flex-row items-center justify-around py-4 border-t border-border-light dark:border-dark-tertiary">
             <View className="items-center">
-              <Ionicons name="eye-outline" size={20} color="#4A4A4A" />
+              <Ionicons name="eye-outline" size={20} color={isDark ? colors.dark.textSecondary : "#4A4A4A"} />
               <Text className="text-sm font-medium text-text-primary dark:text-text-inverse mt-1">
                 {artwork.views.toLocaleString()}
               </Text>
               <Text className="text-xs text-text-tertiary">Views</Text>
             </View>
             <View className="items-center">
-              <Ionicons name="heart-outline" size={20} color="#4A4A4A" />
+              <Ionicons name="heart-outline" size={20} color={isDark ? colors.dark.textSecondary : "#4A4A4A"} />
               <Text className="text-sm font-medium text-text-primary dark:text-text-inverse mt-1">
                 {artwork.likes.toLocaleString()}
               </Text>
               <Text className="text-xs text-text-tertiary">Likes</Text>
             </View>
             <View className="items-center">
-              <Ionicons name="bookmark-outline" size={20} color="#4A4A4A" />
+              <Ionicons name="bookmark-outline" size={20} color={isDark ? colors.dark.textSecondary : "#4A4A4A"} />
               <Text className="text-sm font-medium text-text-primary dark:text-text-inverse mt-1">
                 {artwork.shortlisted.toLocaleString()}
               </Text>

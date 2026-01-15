@@ -8,7 +8,7 @@ import {
   TextInput,
   Alert,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
@@ -81,6 +81,7 @@ function CollectionCard({ collection, onPress, onDelete }: {
 export default function CollectionsScreen() {
   const router = useRouter();
   const { collections, createCollection, deleteCollection } = useCollectionsStore();
+  const insets = useSafeAreaInsets();
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [newName, setNewName] = useState('');
   const [newDescription, setNewDescription] = useState('');
@@ -113,7 +114,7 @@ export default function CollectionsScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-background-secondary dark:bg-dark-primary" edges={['top']}>
+    <SafeAreaView className="flex-1 bg-background-secondary dark:bg-dark-primary" edges={['top', 'left', 'right']}>
       {/* Header */}
       <View className="flex-row items-center justify-between px-4 py-4">
         <View>
@@ -136,7 +137,7 @@ export default function CollectionsScreen() {
       <FlatList
         data={collections}
         keyExtractor={item => item.id}
-        contentContainerStyle={{ padding: 16, paddingBottom: 100 }}
+        contentContainerStyle={{ padding: 16, paddingBottom: 80 + insets.bottom }}
         renderItem={({ item }) => (
           <CollectionCard
             collection={item}

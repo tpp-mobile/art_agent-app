@@ -4,14 +4,12 @@ import {
   Text,
   TouchableOpacity,
   Animated,
-  Dimensions,
+  useWindowDimensions,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNotificationStore } from '../../stores';
 import { Toast as ToastType, ToastType as ToastVariant } from '../../types';
-
-const { width } = Dimensions.get('window');
 
 const toastConfig: Record<
   ToastVariant,
@@ -45,6 +43,7 @@ interface ToastItemProps {
 }
 
 function ToastItem({ toast, onDismiss }: ToastItemProps) {
+  const { width } = useWindowDimensions();
   const translateY = useRef(new Animated.Value(-100)).current;
   const opacity = useRef(new Animated.Value(0)).current;
   const config = toastConfig[toast.type];

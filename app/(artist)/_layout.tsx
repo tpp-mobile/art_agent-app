@@ -2,12 +2,14 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useThemeStore, useChatStore } from '../../src/stores';
 import { colors } from '../../src/constants/theme';
 
 export default function ArtistLayout() {
   const { effectiveTheme } = useThemeStore();
   const { getTotalUnreadCount } = useChatStore();
+  const insets = useSafeAreaInsets();
   const isDark = effectiveTheme === 'dark';
   const unreadCount = getTotalUnreadCount();
 
@@ -20,9 +22,9 @@ export default function ArtistLayout() {
         tabBarStyle: {
           backgroundColor: isDark ? colors.dark.bgCard : colors.light.bgCard,
           borderTopColor: isDark ? colors.dark.borderLight : colors.light.borderLight,
-          paddingTop: 8,
-          paddingBottom: 8,
-          height: 60,
+          paddingTop: 6,
+          paddingBottom: insets.bottom > 0 ? insets.bottom : 12,
+          height: 70 + insets.bottom,
         },
         tabBarLabelStyle: {
           fontSize: 12,

@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
@@ -115,11 +115,10 @@ function NotificationItem({
           <View className="flex-1">
             <View className="flex-row items-center justify-between mb-1">
               <Text
-                className={`text-base font-semibold ${
-                  notification.read
+                className={`text-base font-semibold ${notification.read
                     ? 'text-text-secondary dark:text-gray-400'
                     : 'text-text-primary dark:text-text-inverse'
-                }`}
+                  }`}
               >
                 {notification.title}
               </Text>
@@ -153,6 +152,7 @@ export default function NotificationsScreen() {
     clearAll,
     getUnreadCount,
   } = useAppNotificationStore();
+  const insets = useSafeAreaInsets();
 
   const unreadCount = getUnreadCount();
 
@@ -190,7 +190,7 @@ export default function NotificationsScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-background-secondary dark:bg-dark-primary" edges={['top']}>
+    <SafeAreaView className="flex-1 bg-background-secondary dark:bg-dark-primary" edges={['top', 'left', 'right']}>
       {/* Header */}
       <View className="flex-row items-center justify-between px-4 py-4">
         <View>
@@ -233,7 +233,7 @@ export default function NotificationsScreen() {
             onDelete={() => handleDelete(item)}
           />
         )}
-        contentContainerStyle={{ paddingVertical: 8, paddingBottom: 100 }}
+        contentContainerStyle={{ paddingVertical: 8, paddingBottom: 80 + insets.bottom }}
         ListEmptyComponent={
           <View className="items-center py-16">
             <View className="w-20 h-20 bg-background-tertiary dark:bg-dark-tertiary rounded-full items-center justify-center mb-4">

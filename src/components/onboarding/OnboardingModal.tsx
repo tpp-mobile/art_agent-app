@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Modal, Dimensions, TouchableOpacity } from 'react-native';
+import { View, Text, Modal, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import Animated, {
@@ -13,8 +13,6 @@ import Animated, {
 import { useOnboardingStore, onboardingSteps } from '../../stores/onboardingStore';
 import { Button } from '../ui';
 import { UserRole } from '../../types';
-
-const { width } = Dimensions.get('window');
 
 interface OnboardingModalProps {
   visible: boolean;
@@ -57,10 +55,8 @@ export function OnboardingModal({ visible, role, onComplete }: OnboardingModalPr
     switch (role) {
       case 'artist':
         return '#10b981'; // primary/green
-      case 'buyer':
-        return '#3b82f6'; // blue
       case 'agent':
-        return '#8b5cf6'; // purple
+        return '#3b82f6'; // blue
       default:
         return '#10b981';
     }
@@ -111,11 +107,10 @@ export function OnboardingModal({ visible, role, onComplete }: OnboardingModalPr
               {steps.map((_, index) => (
                 <View
                   key={index}
-                  className={`w-2 h-2 rounded-full mx-1 ${
-                    index === currentStep
-                      ? 'w-6'
-                      : ''
-                  }`}
+                  className={`w-2 h-2 rounded-full mx-1 ${index === currentStep
+                    ? 'w-6'
+                    : ''
+                    }`}
                   style={{
                     backgroundColor: index === currentStep ? roleColor : '#e2e8f0',
                   }}

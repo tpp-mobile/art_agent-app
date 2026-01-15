@@ -1,14 +1,11 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Image, Dimensions } from 'react-native';
+import { View, Text, TouchableOpacity, Image, useWindowDimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { Artwork } from '../../types';
 import { StatusBadge } from '../ui/Badge';
 import { Avatar } from '../ui/Avatar';
 import { useShortlistStore, useComparisonStore, useLikeStore } from '../../stores';
-
-const { width } = Dimensions.get('window');
-const CARD_WIDTH = (width - 48) / 2; // 2 columns with padding
 
 interface ArtworkCardProps {
   artwork: Artwork;
@@ -23,6 +20,8 @@ export function ArtworkCard({
   onPress,
   showCompareCheckbox = false,
 }: ArtworkCardProps) {
+  const { width } = useWindowDimensions();
+  const CARD_WIDTH = variant === 'grid' ? (width - 48) / 2 : width - 32;
   const router = useRouter();
   const { toggle, isShortlisted } = useShortlistStore();
   const { toggle: toggleLike, isLiked } = useLikeStore();
@@ -168,14 +167,14 @@ export function ArtworkCard({
     <TouchableOpacity
       onPress={handlePress}
       activeOpacity={0.9}
-      style={{ width: CARD_WIDTH }}
+      style={{ width: variant === 'grid' ? CARD_WIDTH : '100%' }}
       className={`bg-background-card dark:bg-dark-card rounded-xl overflow-hidden shadow-sm mb-4 ${inComparison && showCompareCheckbox ? 'border-2 border-primary-600' : ''
         }`}
     >
       <View className="relative">
         <Image
           source={{ uri: artwork.thumbnailUrl }}
-          style={{ width: CARD_WIDTH - (inComparison && showCompareCheckbox ? 4 : 0), height: CARD_WIDTH * 0.75 }}
+          style={{ width: (variant === 'grid' ? CARD_WIDTH : width - 32) - (inComparison && showCompareCheckbox ? 4 : 0), height: (variant === 'grid' ? CARD_WIDTH : 200) * 0.75 }}
           resizeMode="cover"
         />
         {showCompareCheckbox && (

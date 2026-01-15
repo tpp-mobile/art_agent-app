@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { View, Text, ScrollView, FlatList, TouchableOpacity } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuthStore, useArtworkStore } from '../../src/stores';
 import { SearchInput, Badge } from '../../src/components/ui';
@@ -20,6 +20,7 @@ export default function ArtistPortfolio() {
   const { getArtworksByArtist, searchArtworks } = useArtworkStore();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedStatus, setSelectedStatus] = useState<VerificationStatus | 'all'>('all');
+  const insets = useSafeAreaInsets();
 
   const artistArtworks = user ? getArtworksByArtist(user.id) : [];
 
@@ -91,7 +92,7 @@ export default function ArtistPortfolio() {
         data={filteredArtworks}
         keyExtractor={(item: Artwork) => item.id}
         numColumns={2}
-        contentContainerStyle={{ padding: 16, paddingBottom: 100 }}
+        contentContainerStyle={{ padding: 16, paddingBottom: 80 + insets.bottom }}
         columnWrapperStyle={{ justifyContent: 'space-between' }}
         renderItem={({ item }: { item: Artwork }) => <ArtworkCard artwork={item} variant="grid" />}
         ListEmptyComponent={

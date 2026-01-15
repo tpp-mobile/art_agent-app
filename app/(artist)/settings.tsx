@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Switch, Alert } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuthStore, useThemeStore } from '../../src/stores';
@@ -51,6 +51,7 @@ export default function ArtistSettings() {
   const router = useRouter();
   const { user, logout } = useAuthStore();
   const { effectiveTheme, toggleTheme, mode } = useThemeStore();
+  const insets = useSafeAreaInsets();
 
   const handleLogout = () => {
     Alert.alert('Logout', 'Are you sure you want to logout?', [
@@ -72,8 +73,8 @@ export default function ArtistSettings() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-background-secondary dark:bg-dark-primary" edges={['top']}>
-      <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
+    <SafeAreaView className="flex-1 bg-background-secondary dark:bg-dark-primary" edges={['top', 'left', 'right']}>
+      <ScrollView contentContainerStyle={{ paddingBottom: 80 + insets.bottom }}>
         {/* Header */}
         <View className="px-4 py-4">
           <Text className="text-2xl font-bold text-text-primary dark:text-text-inverse">Settings</Text>

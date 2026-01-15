@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Switch, Alert } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuthStore, useThemeStore, useShortlistStore, useAppNotificationStore, useOnboardingStore } from '../../src/stores';
@@ -63,6 +63,7 @@ export default function AgentSettings() {
   const { shortlistedIds, clear } = useShortlistStore();
   const { getUnreadCount } = useAppNotificationStore();
   const { resetOnboarding } = useOnboardingStore();
+  const insets = useSafeAreaInsets();
 
   const unreadNotifications = getUnreadCount();
 
@@ -126,8 +127,8 @@ export default function AgentSettings() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-background-secondary dark:bg-dark-primary" edges={['top']}>
-      <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
+    <SafeAreaView className="flex-1 bg-background-secondary dark:bg-dark-primary" edges={['top', 'left', 'right']}>
+      <ScrollView contentContainerStyle={{ paddingBottom: 80 + insets.bottom }}>
         {/* Header */}
         <View className="px-4 py-4">
           <Text className="text-2xl font-bold text-text-primary dark:text-text-inverse">Settings</Text>

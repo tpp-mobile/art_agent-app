@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, FlatList } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useChatStore } from '../../src/stores';
 import { ChatListItem } from '../../src/components/chat';
@@ -9,9 +9,10 @@ import { Conversation } from '../../src/types';
 export default function AgentChat() {
   const { getConversations } = useChatStore();
   const conversations = getConversations();
+  const insets = useSafeAreaInsets();
 
   return (
-    <SafeAreaView className="flex-1 bg-background-secondary dark:bg-dark-primary" edges={['top']}>
+    <SafeAreaView className="flex-1 bg-background-secondary dark:bg-dark-primary" edges={['top', 'left', 'right']}>
       {/* Header */}
       <View className="px-4 py-4">
         <Text className="text-2xl font-bold text-text-primary dark:text-text-inverse">Messages</Text>
@@ -24,7 +25,7 @@ export default function AgentChat() {
       <FlatList
         data={conversations}
         keyExtractor={(item: Conversation) => item.id}
-        contentContainerStyle={{ paddingBottom: 100 }}
+        contentContainerStyle={{ paddingBottom: 80 + insets.bottom }}
         renderItem={({ item }: { item: Conversation }) => <ChatListItem conversation={item} />}
         ListEmptyComponent={
           <View className="items-center py-16 px-8">

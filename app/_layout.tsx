@@ -5,6 +5,8 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useColorScheme as useSystemColorScheme } from 'react-native';
 import { useColorScheme } from 'nativewind';
+import { useFonts } from 'expo-font';
+import { Ionicons } from '@expo/vector-icons';
 import { ToastContainer } from '../src/components/ui/Toast';
 import { useThemeStore, useAuthStore } from '../src/stores';
 import '../global.css';
@@ -52,6 +54,10 @@ function AuthNavigator() {
 }
 
 export default function RootLayout() {
+  const [fontsLoaded] = useFonts({
+    ...Ionicons.font,
+  });
+
   const systemColorScheme = useSystemColorScheme();
   const { setColorScheme } = useColorScheme();
   const { effectiveTheme, mode, setMode } = useThemeStore();
@@ -65,6 +71,10 @@ export default function RootLayout() {
       setMode('system');
     }
   }, [systemColorScheme]);
+
+  if (!fontsLoaded) {
+    return null;
+  }
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>

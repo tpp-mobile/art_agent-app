@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, FlatList, TouchableOpacity, Alert } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useArtworkStore, useShortlistStore } from '../../src/stores';
 import { Button, Card } from '../../src/components/ui';
@@ -9,6 +9,7 @@ import { ArtworkCard } from '../../src/components/artwork';
 export default function Shortlist() {
   const { shortlistedIds, clear } = useShortlistStore();
   const { getArtworkById } = useArtworkStore();
+  const insets = useSafeAreaInsets();
 
   const shortlistedArtworks = shortlistedIds
     .map(id => getArtworkById(id))
@@ -31,7 +32,7 @@ export default function Shortlist() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-background-secondary dark:bg-dark-primary" edges={['top']}>
+    <SafeAreaView className="flex-1 bg-background-secondary dark:bg-dark-primary" edges={['top', 'left', 'right']}>
       {/* Header */}
       <View className="px-4 py-4 flex-row items-center justify-between">
         <View>
@@ -72,7 +73,7 @@ export default function Shortlist() {
       <FlatList
         data={shortlistedArtworks}
         keyExtractor={item => item!.id}
-        contentContainerStyle={{ padding: 16, paddingBottom: 100 }}
+        contentContainerStyle={{ padding: 16, paddingBottom: 80 + insets.bottom }}
         renderItem={({ item }) =>
           item ? <ArtworkCard artwork={item} variant="list" /> : null
         }
