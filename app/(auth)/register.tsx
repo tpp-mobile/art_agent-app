@@ -6,23 +6,66 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
+  ActivityIndicator,
 } from 'react-native';
 import { useRouter, Link } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useAuthStore } from '../../src/stores';
+import { useAuthStore, useThemeStore } from '../../src/stores';
 import { Input } from '../../src/components/ui';
 import { UserRole } from '../../src/types';
 
+const colors = {
+  light: {
+    background: '#F2F2F2',
+    card: '#ffffff',
+    text: '#1E1E1E',
+    textSecondary: '#4A4A4A',
+    textTertiary: '#757575',
+    border: '#E0E0E0',
+    backButton: 'rgba(255, 255, 255, 0.9)',
+    iconColor: '#374151',
+    inputIcon: '#9ca3af',
+    errorBg: '#fef2f2',
+    errorBorder: '#fecaca',
+    errorText: '#dc2626',
+    roleUnselectedBg: '#ffffff',
+    roleUnselectedBorder: '#e2e8f0',
+    roleUnselectedText: '#64748b',
+    roleUnselectedIcon: '#94a3b8',
+  },
+  dark: {
+    background: '#121212',
+    card: '#1F1F1F',
+    text: '#EDEDED',
+    textSecondary: '#B0B0B0',
+    textTertiary: '#757575',
+    border: '#2A2A2A',
+    backButton: 'rgba(45, 45, 45, 0.9)',
+    iconColor: '#E0E0E0',
+    inputIcon: '#757575',
+    errorBg: '#2d1f1f',
+    errorBorder: '#5c2828',
+    errorText: '#f87171',
+    roleUnselectedBg: '#1F1F1F',
+    roleUnselectedBorder: '#2A2A2A',
+    roleUnselectedText: '#9ca3af',
+    roleUnselectedIcon: '#6b7280',
+  },
+};
+
 const roleOptions: { role: UserRole; label: string; description: string; icon: keyof typeof Ionicons.glyphMap; color: string }[] = [
-  { role: 'artist', label: 'Artist', description: 'Create & verify artwork', icon: 'brush', color: '#10b981' },
-  { role: 'agent', label: 'Agent / Buyer', description: 'Discover & collect art', icon: 'images', color: '#3b82f6' },
+  { role: 'artist', label: 'Artist', description: 'Create & verify artwork', icon: 'brush', color: '#D97757' },
+  { role: 'agent', label: 'Agent / Buyer', description: 'Discover & collect art', icon: 'images', color: '#3A7DFF' },
 ];
 
 export default function RegisterScreen() {
   const router = useRouter();
   const { register } = useAuthStore();
+  const { effectiveTheme } = useThemeStore();
+  const theme = colors[effectiveTheme];
+  const isDark = effectiveTheme === 'dark';
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -82,93 +125,158 @@ export default function RegisterScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-background-secondary">
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        className="flex-1"
+        style={{ flex: 1 }}
       >
         <ScrollView
           contentContainerStyle={{ flexGrow: 1 }}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
-          {/* Header */}
-          <View className="px-6 pt-4">
+          {/* Header with Back Button */}
+          <View style={{ paddingHorizontal: 24, paddingTop: 16, flexDirection: 'row', alignItems: 'center' }}>
             <TouchableOpacity
               onPress={() => router.back()}
-              className="w-10 h-10 bg-background-primary rounded-full items-center justify-center"
+              style={{
+                width: 44,
+                height: 44,
+                borderRadius: 22,
+                backgroundColor: theme.backButton,
+                alignItems: 'center',
+                justifyContent: 'center',
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: isDark ? 0.3 : 0.08,
+                shadowRadius: 8,
+                elevation: 3,
+              }}
             >
-              <Ionicons name="arrow-back" size={24} color="#64748b" />
+              <Ionicons name="arrow-back" size={22} color={theme.iconColor} />
             </TouchableOpacity>
           </View>
 
-          {/* Logo & Title */}
-          <View className="px-6 pt-8 pb-6">
-            <View className="flex-row items-center mb-6">
-              <View className="w-12 h-12 bg-primary-500 rounded-xl items-center justify-center">
-                <Ionicons name="shield-checkmark" size={28} color="#ffffff" />
-              </View>
-              <Text className="text-2xl font-bold text-text-primary ml-3">
-                Art Agent
-              </Text>
+          {/* Logo & Branding Section */}
+          <View style={{ paddingHorizontal: 24, paddingTop: 32, paddingBottom: 24, alignItems: 'center' }}>
+            <View
+              style={{
+                width: 72,
+                height: 72,
+                borderRadius: 20,
+                shadowColor: '#3A7DFF',
+                shadowOffset: { width: 0, height: 8 },
+                shadowOpacity: 0.3,
+                shadowRadius: 16,
+                elevation: 8,
+                marginBottom: 20,
+              }}
+            >
+              <LinearGradient
+                colors={['#3A7DFF', '#2563eb']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={{
+                  width: 72,
+                  height: 72,
+                  borderRadius: 20,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <Ionicons name="person-add" size={36} color="#ffffff" />
+              </LinearGradient>
             </View>
 
-            <Text className="text-3xl font-bold text-text-primary">
+            <Text
+              style={{
+                fontSize: 28,
+                fontWeight: '700',
+                color: theme.text,
+                letterSpacing: -0.5,
+              }}
+            >
               Create Account
             </Text>
-            <Text className="text-text-secondary mt-2">
-              Join our community of verified artists and collectors
+            <Text
+              style={{
+                fontSize: 15,
+                color: theme.textSecondary,
+                marginTop: 8,
+                textAlign: 'center',
+              }}
+            >
+              Join our community of artists and collectors
             </Text>
           </View>
 
-          {/* Form */}
-          <View className="px-6 py-4">
+          {/* Form Card */}
+          <View
+            style={{
+              marginHorizontal: 20,
+              backgroundColor: theme.card,
+              borderRadius: 24,
+              padding: 24,
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: isDark ? 0.3 : 0.06,
+              shadowRadius: 16,
+              elevation: 4,
+              borderWidth: isDark ? 1 : 0,
+              borderColor: theme.border,
+            }}
+          >
             {/* Role Selection */}
-            <Text className="text-sm font-medium text-text-primary mb-3">
+            <Text style={{ fontSize: 14, fontWeight: '600', color: theme.text, marginBottom: 12 }}>
               I am a...
             </Text>
-            <View className="flex-row mb-6" style={{ gap: 12 }}>
-              {roleOptions.map((option) => (
-                <TouchableOpacity
-                  key={option.role}
-                  onPress={() => setSelectedRole(option.role)}
-                  style={{
-                    flex: 1,
-                    padding: 16,
-                    borderRadius: 12,
-                    borderWidth: 2,
-                    borderColor: selectedRole === option.role ? option.color : '#e2e8f0',
-                    backgroundColor: selectedRole === option.role ? `${option.color}10` : '#ffffff',
-                    alignItems: 'center',
-                  }}
-                >
-                  <Ionicons
-                    name={option.icon}
-                    size={28}
-                    color={selectedRole === option.role ? option.color : '#94a3b8'}
-                  />
-                  <Text
+            <View style={{ flexDirection: 'row', marginBottom: 20, gap: 12 }}>
+              {roleOptions.map((option) => {
+                const isSelected = selectedRole === option.role;
+                return (
+                  <TouchableOpacity
+                    key={option.role}
+                    onPress={() => setSelectedRole(option.role)}
                     style={{
-                      fontSize: 15,
-                      marginTop: 8,
-                      fontWeight: '600',
-                      color: selectedRole === option.role ? option.color : '#64748b',
+                      flex: 1,
+                      padding: 16,
+                      borderRadius: 12,
+                      borderWidth: 2,
+                      borderColor: isSelected ? option.color : theme.roleUnselectedBorder,
+                      backgroundColor: isSelected
+                        ? (isDark ? `${option.color}20` : `${option.color}10`)
+                        : theme.roleUnselectedBg,
+                      alignItems: 'center',
                     }}
                   >
-                    {option.label}
-                  </Text>
-                  <Text
-                    style={{
-                      fontSize: 12,
-                      marginTop: 4,
-                      color: selectedRole === option.role ? '#64748b' : '#94a3b8',
-                      textAlign: 'center',
-                    }}
-                  >
-                    {option.description}
-                  </Text>
-                </TouchableOpacity>
-              ))}
+                    <Ionicons
+                      name={option.icon}
+                      size={28}
+                      color={isSelected ? option.color : theme.roleUnselectedIcon}
+                    />
+                    <Text
+                      style={{
+                        fontSize: 15,
+                        marginTop: 8,
+                        fontWeight: '600',
+                        color: isSelected ? option.color : theme.roleUnselectedText,
+                      }}
+                    >
+                      {option.label}
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        marginTop: 4,
+                        color: isSelected ? theme.textSecondary : theme.textTertiary,
+                        textAlign: 'center',
+                      }}
+                    >
+                      {option.description}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
             </View>
 
             <Input
@@ -178,18 +286,18 @@ export default function RegisterScreen() {
               onChangeText={setName}
               autoCapitalize="words"
               autoComplete="name"
-              leftIcon={<Ionicons name="person-outline" size={20} color="#94a3b8" />}
+              leftIcon={<Ionicons name="person-outline" size={20} color={theme.inputIcon} />}
             />
 
             <Input
-              label="Email"
-              placeholder="Enter your email"
+              label="Email Address"
+              placeholder="you@example.com"
               value={email}
               onChangeText={setEmail}
               keyboardType="email-address"
               autoCapitalize="none"
               autoComplete="email"
-              leftIcon={<Ionicons name="mail-outline" size={20} color="#94a3b8" />}
+              leftIcon={<Ionicons name="mail-outline" size={20} color={theme.inputIcon} />}
             />
 
             <Input
@@ -200,7 +308,7 @@ export default function RegisterScreen() {
               isPassword
               autoCapitalize="none"
               autoComplete="new-password"
-              leftIcon={<Ionicons name="lock-closed-outline" size={20} color="#94a3b8" />}
+              leftIcon={<Ionicons name="lock-closed-outline" size={20} color={theme.inputIcon} />}
               helperText="At least 6 characters"
             />
 
@@ -212,46 +320,95 @@ export default function RegisterScreen() {
               isPassword
               autoCapitalize="none"
               autoComplete="new-password"
-              leftIcon={<Ionicons name="lock-closed-outline" size={20} color="#94a3b8" />}
+              leftIcon={<Ionicons name="lock-closed-outline" size={20} color={theme.inputIcon} />}
             />
 
+            {/* Error Message */}
             {error ? (
-              <View className="bg-error/10 border border-error rounded-lg p-3 mb-4">
-                <Text className="text-error text-sm">{error}</Text>
+              <View
+                style={{
+                  backgroundColor: theme.errorBg,
+                  borderWidth: 1,
+                  borderColor: theme.errorBorder,
+                  borderRadius: 12,
+                  padding: 14,
+                  marginBottom: 16,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}
+              >
+                <Ionicons name="alert-circle" size={20} color={theme.errorText} style={{ marginRight: 10 }} />
+                <Text style={{ color: theme.errorText, fontSize: 14, flex: 1 }}>{error}</Text>
               </View>
             ) : null}
 
+            {/* Create Account Button */}
             <TouchableOpacity
               onPress={handleRegister}
               disabled={isLoading}
-              activeOpacity={0.9}
-              style={{ marginTop: 8, opacity: isLoading ? 0.6 : 1 }}
+              activeOpacity={0.85}
+              style={{
+                marginTop: 4,
+                shadowColor: '#3A7DFF',
+                shadowOffset: { width: 0, height: 6 },
+                shadowOpacity: 0.35,
+                shadowRadius: 12,
+                elevation: 6,
+              }}
             >
               <LinearGradient
-                colors={['#10b981', '#059669']}
+                colors={isLoading ? ['#6b7280', '#4b5563'] : ['#3A7DFF', '#2563eb']}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
-                style={{ borderRadius: 12, padding: 16 }}
+                style={{
+                  borderRadius: 14,
+                  paddingVertical: 16,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
               >
-                <Text style={{ color: '#ffffff', textAlign: 'center', fontWeight: 'bold', fontSize: 18 }}>
+                {isLoading ? (
+                  <ActivityIndicator color="#ffffff" style={{ marginRight: 10 }} />
+                ) : null}
+                <Text
+                  style={{
+                    color: '#ffffff',
+                    fontWeight: '600',
+                    fontSize: 17,
+                    letterSpacing: 0.3,
+                  }}
+                >
                   {isLoading ? 'Creating Account...' : 'Create Account'}
                 </Text>
               </LinearGradient>
             </TouchableOpacity>
 
-            <View className="flex-row justify-center mt-4">
-              <Text className="text-text-secondary">Already have an account? </Text>
+            {/* Sign In Link */}
+            <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 20 }}>
+              <Text style={{ color: theme.textSecondary, fontSize: 15 }}>
+                Already have an account?{' '}
+              </Text>
               <Link href="/(auth)/login" asChild>
                 <TouchableOpacity>
-                  <Text className="text-primary-500 font-semibold">Sign In</Text>
+                  <Text style={{ color: '#3A7DFF', fontWeight: '600', fontSize: 15 }}>
+                    Sign In
+                  </Text>
                 </TouchableOpacity>
               </Link>
             </View>
           </View>
 
           {/* Footer */}
-          <View className="px-6 py-6">
-            <Text className="text-text-tertiary text-xs text-center">
+          <View style={{ paddingHorizontal: 24, paddingVertical: 24 }}>
+            <Text
+              style={{
+                color: theme.textTertiary,
+                fontSize: 12,
+                textAlign: 'center',
+                lineHeight: 18,
+              }}
+            >
               By creating an account, you agree to our Terms of Service and Privacy Policy
             </Text>
           </View>

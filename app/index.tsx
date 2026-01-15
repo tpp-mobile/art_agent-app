@@ -9,11 +9,49 @@ import { useRouter, Link } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import { useAuthStore } from '../src/stores';
+import { useAuthStore, useThemeStore } from '../src/stores';
+
+const colors = {
+  light: {
+    background: '#FFFDF9',
+    card: '#ffffff',
+    cardAlt: '#F8FAFC',
+    text: '#1E1E1E',
+    textSecondary: '#4A4A4A',
+    textTertiary: '#757575',
+    border: '#E0E0E0',
+    featureBg: '#EFF6FF',
+    featureIcon: '#3A7DFF',
+    infoBg: '#EFF6FF',
+    infoBorder: '#BFDBFE',
+    infoTitle: '#1D4ED8',
+    infoText: '#2563EB',
+    buttonOutline: '#3A7DFF',
+  },
+  dark: {
+    background: '#121212',
+    card: '#1F1F1F',
+    cardAlt: '#1A1A1A',
+    text: '#EDEDED',
+    textSecondary: '#B0B0B0',
+    textTertiary: '#757575',
+    border: '#2A2A2A',
+    featureBg: '#1a2435',
+    featureIcon: '#60A5FA',
+    infoBg: '#1a2435',
+    infoBorder: '#2d3f5c',
+    infoTitle: '#60A5FA',
+    infoText: '#93C5FD',
+    buttonOutline: '#3A7DFF',
+  },
+};
 
 export default function LandingScreen() {
   const router = useRouter();
   const { isAuthenticated, user } = useAuthStore();
+  const { effectiveTheme } = useThemeStore();
+  const theme = colors[effectiveTheme];
+  const isDark = effectiveTheme === 'dark';
 
   // Redirect if already authenticated
   useEffect(() => {
@@ -26,33 +64,68 @@ export default function LandingScreen() {
   }, [isAuthenticated, user]);
 
   return (
-    <SafeAreaView className="flex-1 bg-background-primary">
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}>
       <ScrollView
-        contentContainerStyle={{ flexGrow: 1, backgroundColor: '#FFFDF9' }}
+        contentContainerStyle={{ flexGrow: 1 }}
         showsVerticalScrollIndicator={false}
       >
         {/* Hero Section */}
-        <View className="px-6 pt-8 pb-6">
-          <View className="flex-row items-center mb-2">
-            <View className="w-10 h-10 bg-primary-500 rounded-xl items-center justify-center mr-3">
-              <Ionicons name="shield-checkmark" size={24} color="#FFFDF9" />
-            </View>
-            <Text className="text-2xl font-bold text-text-primary" style={{ fontFamily: 'PlayfairDisplay' }}>Art Agent</Text>
+        <View style={{ paddingHorizontal: 24, paddingTop: 32, paddingBottom: 24 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
+            <LinearGradient
+              colors={['#3A7DFF', '#2563eb']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={{
+                width: 44,
+                height: 44,
+                borderRadius: 12,
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginRight: 12,
+              }}
+            >
+              <Ionicons name="color-palette" size={24} color="#ffffff" />
+            </LinearGradient>
+            <Text
+              style={{
+                fontSize: 24,
+                fontWeight: '700',
+                color: theme.text,
+              }}
+            >
+              Art Agent
+            </Text>
           </View>
 
-          <Text className="text-4xl font-bold text-text-primary mt-6 leading-tight">
+          <Text
+            style={{
+              fontSize: 36,
+              fontWeight: '700',
+              color: theme.text,
+              marginTop: 24,
+              lineHeight: 44,
+            }}
+          >
             Verify Human{'\n'}Creativity
           </Text>
 
-          <Text className="text-lg text-text-secondary mt-4 leading-relaxed">
+          <Text
+            style={{
+              fontSize: 17,
+              color: theme.textSecondary,
+              marginTop: 16,
+              lineHeight: 26,
+            }}
+          >
             In the age of AI, prove the authenticity of human-created art with
             blockchain-backed verification certificates.
           </Text>
         </View>
 
         {/* Features */}
-        <View className="px-6 py-4">
-          <View className="flex-row flex-wrap">
+        <View style={{ paddingHorizontal: 24, paddingVertical: 16 }}>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
             {[
               { icon: 'scan', label: 'AI Detection' },
               { icon: 'layers', label: 'Layer Analysis' },
@@ -61,16 +134,36 @@ export default function LandingScreen() {
             ].map((feature, index) => (
               <View
                 key={index}
-                className="w-1/2 flex-row items-center py-2"
+                style={{
+                  width: '50%',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  paddingVertical: 8,
+                }}
               >
-                <View className="w-8 h-8 bg-primary-100 rounded-lg items-center justify-center">
+                <View
+                  style={{
+                    width: 36,
+                    height: 36,
+                    backgroundColor: theme.featureBg,
+                    borderRadius: 10,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
                   <Ionicons
                     name={feature.icon as keyof typeof Ionicons.glyphMap}
                     size={18}
-                    color="#3A7DFF"
+                    color={theme.featureIcon}
                   />
                 </View>
-                <Text className="text-sm text-text-secondary ml-2">
+                <Text
+                  style={{
+                    fontSize: 14,
+                    color: theme.textSecondary,
+                    marginLeft: 10,
+                  }}
+                >
                   {feature.label}
                 </Text>
               </View>
@@ -79,8 +172,15 @@ export default function LandingScreen() {
         </View>
 
         {/* User Roles Info */}
-        <View className="px-6 py-4">
-          <Text className="text-xl font-bold text-text-primary mb-4">
+        <View style={{ paddingHorizontal: 24, paddingVertical: 16 }}>
+          <Text
+            style={{
+              fontSize: 20,
+              fontWeight: '700',
+              color: theme.text,
+              marginBottom: 16,
+            }}
+          >
             Who's it for?
           </Text>
 
@@ -101,11 +201,31 @@ export default function LandingScreen() {
             ].map((role, index) => (
               <View
                 key={index}
-                className="flex-row items-center bg-background-primary p-4 rounded-xl mb-3"
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  backgroundColor: theme.card,
+                  padding: 16,
+                  borderRadius: 16,
+                  marginBottom: 12,
+                  borderWidth: isDark ? 1 : 0,
+                  borderColor: theme.border,
+                  shadowColor: '#000',
+                  shadowOffset: { width: 0, height: 2 },
+                  shadowOpacity: isDark ? 0.2 : 0.05,
+                  shadowRadius: 8,
+                  elevation: 2,
+                }}
               >
                 <View
-                  className="w-10 h-10 rounded-lg items-center justify-center"
-                  style={{ backgroundColor: `${role.color}20` }}
+                  style={{
+                    width: 44,
+                    height: 44,
+                    borderRadius: 12,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: isDark ? `${role.color}30` : `${role.color}15`,
+                  }}
                 >
                   <Ionicons
                     name={role.icon as keyof typeof Ionicons.glyphMap}
@@ -113,9 +233,25 @@ export default function LandingScreen() {
                     color={role.color}
                   />
                 </View>
-                <View className="flex-1 ml-3">
-                  <Text className="text-text-primary font-semibold">{role.title}</Text>
-                  <Text className="text-text-secondary text-sm">{role.description}</Text>
+                <View style={{ flex: 1, marginLeft: 14 }}>
+                  <Text
+                    style={{
+                      color: theme.text,
+                      fontWeight: '600',
+                      fontSize: 16,
+                    }}
+                  >
+                    {role.title}
+                  </Text>
+                  <Text
+                    style={{
+                      color: theme.textSecondary,
+                      fontSize: 14,
+                      marginTop: 2,
+                    }}
+                  >
+                    {role.description}
+                  </Text>
                 </View>
               </View>
             ))}
@@ -123,16 +259,35 @@ export default function LandingScreen() {
         </View>
 
         {/* Auth Buttons */}
-        <View className="px-6 py-6">
+        <View style={{ paddingHorizontal: 24, paddingVertical: 24 }}>
           <Link href="/(auth)/login" asChild>
-            <TouchableOpacity activeOpacity={0.9}>
+            <TouchableOpacity
+              activeOpacity={0.9}
+              style={{
+                shadowColor: '#3A7DFF',
+                shadowOffset: { width: 0, height: 6 },
+                shadowOpacity: 0.35,
+                shadowRadius: 12,
+                elevation: 6,
+              }}
+            >
               <LinearGradient
                 colors={['#3A7DFF', '#2563eb']}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
-                style={{ borderRadius: 12, padding: 16 }}
+                style={{
+                  borderRadius: 14,
+                  paddingVertical: 16,
+                }}
               >
-                <Text style={{ color: '#FFFDF9', textAlign: 'center', fontWeight: 'bold', fontSize: 18 }}>
+                <Text
+                  style={{
+                    color: '#ffffff',
+                    textAlign: 'center',
+                    fontWeight: '600',
+                    fontSize: 17,
+                  }}
+                >
                   Sign In
                 </Text>
               </LinearGradient>
@@ -142,9 +297,23 @@ export default function LandingScreen() {
           <Link href="/(auth)/register" asChild>
             <TouchableOpacity
               activeOpacity={0.8}
-              className="mt-3 border-2 border-primary-500 rounded-xl p-4"
+              style={{
+                marginTop: 12,
+                borderWidth: 2,
+                borderColor: theme.buttonOutline,
+                borderRadius: 14,
+                paddingVertical: 16,
+                backgroundColor: isDark ? 'rgba(58, 125, 255, 0.1)' : 'transparent',
+              }}
             >
-              <Text className="text-primary-500 text-center font-bold text-lg">
+              <Text
+                style={{
+                  color: theme.buttonOutline,
+                  textAlign: 'center',
+                  fontWeight: '600',
+                  fontSize: 17,
+                }}
+              >
                 Create Account
               </Text>
             </TouchableOpacity>
@@ -152,28 +321,56 @@ export default function LandingScreen() {
         </View>
 
         {/* Demo Credentials Info */}
-        <View className="px-6 py-4 mb-4">
-          <View className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl">
-            <View className="flex-row items-center mb-2">
-              <Ionicons name="information-circle" size={20} color="#3A7DFF" />
-              <Text className="text-blue-700 dark:text-blue-400 font-semibold ml-2">
+        <View style={{ paddingHorizontal: 24, paddingVertical: 16, marginBottom: 16 }}>
+          <View
+            style={{
+              backgroundColor: theme.infoBg,
+              padding: 16,
+              borderRadius: 16,
+              borderWidth: 1,
+              borderColor: theme.infoBorder,
+            }}
+          >
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
+              <Ionicons name="information-circle" size={20} color={theme.infoTitle} />
+              <Text
+                style={{
+                  color: theme.infoTitle,
+                  fontWeight: '600',
+                  marginLeft: 8,
+                  fontSize: 15,
+                }}
+              >
                 Demo Credentials
               </Text>
             </View>
-            <Text className="text-blue-600 dark:text-blue-300 text-sm">
+            <Text
+              style={{
+                color: theme.infoText,
+                fontSize: 14,
+                lineHeight: 22,
+              }}
+            >
               Try the app with these demo accounts:{'\n'}
               {'\n'}
-              <Text className="font-medium">Artist:</Text> artist@demo.com{'\n'}
-              <Text className="font-medium">Agent / Buyer:</Text> agent@demo.com{'\n'}
+              <Text style={{ fontWeight: '600' }}>Artist:</Text> artist@demo.com{'\n'}
+              <Text style={{ fontWeight: '600' }}>Agent / Buyer:</Text> agent@demo.com{'\n'}
               {'\n'}
-              Password for all: <Text className="font-medium">demo123</Text>
+              Password for all: <Text style={{ fontWeight: '600' }}>demo123</Text>
             </Text>
           </View>
         </View>
 
         {/* Footer */}
-        <View className="px-6 py-8 items-center">
-          <Text className="text-text-tertiary text-sm text-center">
+        <View style={{ paddingHorizontal: 24, paddingVertical: 32, alignItems: 'center' }}>
+          <Text
+            style={{
+              color: theme.textTertiary,
+              fontSize: 13,
+              textAlign: 'center',
+              lineHeight: 20,
+            }}
+          >
             Trusted by artists and collectors worldwide.{'\n'}
             Bank-grade security. Gallery-quality curation.
           </Text>
