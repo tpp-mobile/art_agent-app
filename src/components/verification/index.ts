@@ -1,0 +1,1 @@
+export { VerificationAnimation } from './VerificationAnimation';
